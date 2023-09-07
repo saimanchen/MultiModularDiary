@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("io.realm.kotlin")
 }
 
 android {
@@ -68,5 +69,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // splash screen api
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //MongoDB Realm
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("io.realm.kotlin:library-sync:1.10.0")
 }
