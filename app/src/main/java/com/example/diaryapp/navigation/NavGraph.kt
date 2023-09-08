@@ -1,5 +1,6 @@
 package com.example.diaryapp.navigation
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -7,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 
 @Composable
@@ -24,9 +26,15 @@ fun SetupNavGraph(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.authenticationRoute() {
     composable(route = Screen.Authentication.route) {
+        AuthenticationScreen(
+            loadingState = false,
+            onButtonClicked = {
 
+            }
+        )
     }
 }
 

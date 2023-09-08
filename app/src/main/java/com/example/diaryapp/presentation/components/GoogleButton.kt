@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,13 +43,14 @@ fun GoogleButton(
     primaryText: String = "Sign in with Google",
     secondaryText: String = "Signing in..",
     icon: Int = R.drawable.ic_google_logo,
-    shape: CornerBasedShape = Shapes().extraSmall,
-    borderColor: Color = MaterialTheme.colorScheme.secondary,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    borderColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
     borderStrokeWidth: Dp = 1.dp,
     progressIndicatorColor: Color = Color.Black,
     onclick: () -> Unit
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
+
     var buttonText by remember { mutableStateOf(primaryText) }
     LaunchedEffect(key1 = loadingState) {
         buttonText = if (loadingState) secondaryText else primaryText
@@ -57,7 +59,6 @@ fun GoogleButton(
     Surface(
         modifier = modifier
             .clickable(enabled = !loadingState) { onclick() },
-        shape = shape,
         border = BorderStroke(
             width = borderStrokeWidth,
             color = borderColor
@@ -79,13 +80,17 @@ fun GoogleButton(
         ) {
             Icon(
                 painter = painterResource(id = icon),
-                contentDescription = "Google Logo",
+                contentDescription = null,
                 tint = Color.Unspecified
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = buttonText,
-                style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
+                style = TextStyle(
+                    fontSize = MaterialTheme
+                        .typography.bodyMedium.fontSize,
+                    color = if (isDarkTheme) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+                )
             )
 
             if (loadingState) {
