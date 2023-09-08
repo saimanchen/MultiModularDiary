@@ -81,4 +81,7 @@ dependencies {
 
     // One Tap Login
     implementation("com.github.stevdza-san:OneTapCompose:1.0.7")
+
+    // Message Bar Compose
+    implementation("com.github.stevdza-san:MessageBarCompose:1.0.5")
 }

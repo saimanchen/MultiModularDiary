@@ -31,8 +31,11 @@ import androidx.compose.ui.unit.dp
 import com.example.diaryapp.R
 import com.example.diaryapp.presentation.components.GoogleButton
 import com.example.diaryapp.util.Constants.CLIENT_ID
+import com.stevdzasan.messagebar.ContentWithMessageBar
+import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
 import com.stevdzasan.onetap.OneTapSignInWithGoogle
+import java.lang.Exception
 
 @ExperimentalMaterial3Api
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -40,6 +43,7 @@ import com.stevdzasan.onetap.OneTapSignInWithGoogle
 fun AuthenticationScreen(
     loadingState: Boolean,
     oneTapState: OneTapSignInState,
+    messageBarState: MessageBarState,
     onButtonClicked: () -> Unit
 ) {
     Scaffold(
@@ -48,10 +52,12 @@ fun AuthenticationScreen(
             .navigationBarsPadding()
             .statusBarsPadding(),
         content = {
-            AuthenticationContent(
-                loadingState = loadingState,
-                onButtonClicked = onButtonClicked
-            )
+            ContentWithMessageBar(messageBarState = messageBarState) {
+                AuthenticationContent(
+                    loadingState = loadingState,
+                    onButtonClicked = onButtonClicked
+                )
+            }
         }
     )
     
@@ -60,10 +66,11 @@ fun AuthenticationScreen(
         clientId = CLIENT_ID,
         onTokenIdReceived = { tokenId ->
             Log.d("Auth", tokenId)
+            messageBarState.addSuccess("Successfully logged in!")
         },
         onDialogDismissed = { message ->
             Log.d("Auth", message)
-
+            messageBarState.addError(Exception(message))
         }
     )
 }
