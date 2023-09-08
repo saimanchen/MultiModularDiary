@@ -69,10 +69,13 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // splash screen api
+    // Compose Navigation
+    implementation("androidx.navigation:navigation-compose:2.6.0")
+
+    // Splash Screen Api
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    //MongoDB Realm
+    // MongoDB Realm
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("io.realm.kotlin:library-sync:1.10.0")
 }
