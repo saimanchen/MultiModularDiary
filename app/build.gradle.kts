@@ -78,4 +78,7 @@ dependencies {
     // MongoDB Realm
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("io.realm.kotlin:library-sync:1.10.0")
+
+    // One Tap Login
+    implementation("com.github.stevdza-san:OneTapCompose:1.0.7")
 }

@@ -1,6 +1,7 @@
 package com.example.diaryapp.presentation.screens.authentication
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -29,12 +30,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.diaryapp.R
 import com.example.diaryapp.presentation.components.GoogleButton
+import com.example.diaryapp.util.Constants.CLIENT_ID
+import com.stevdzasan.onetap.OneTapSignInState
+import com.stevdzasan.onetap.OneTapSignInWithGoogle
 
 @ExperimentalMaterial3Api
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AuthenticationScreen(
     loadingState: Boolean,
+    oneTapState: OneTapSignInState,
     onButtonClicked: () -> Unit
 ) {
     Scaffold(
@@ -47,6 +52,18 @@ fun AuthenticationScreen(
                 loadingState = loadingState,
                 onButtonClicked = onButtonClicked
             )
+        }
+    )
+    
+    OneTapSignInWithGoogle(
+        state = oneTapState,
+        clientId = CLIENT_ID,
+        onTokenIdReceived = { tokenId ->
+            Log.d("Auth", tokenId)
+        },
+        onDialogDismissed = { message ->
+            Log.d("Auth", message)
+
         }
     )
 }
