@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -77,7 +75,8 @@ dependencies {
 
     // MongoDB Realm
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("io.realm.kotlin:library-sync:1.10.0")
+    implementation("io.realm.kotlin:library-sync:1.11.0")
+    implementation("io.realm.kotlin:library-base:1.11.0")
 
     // One Tap Login
     implementation("com.github.stevdza-san:OneTapCompose:1.0.7")
