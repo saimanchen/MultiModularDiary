@@ -1,9 +1,17 @@
 package com.example.diaryapp.navigation
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -13,9 +21,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
+import com.example.diaryapp.util.Constants.APP_ID
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
+import io.realm.kotlin.mongodb.App
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @Composable
@@ -27,21 +39,30 @@ fun SetupNavGraph(
         startDestination = startDestination,
         navController = navController
     ) {
-        authenticationRoute()
+        authenticationRoute(
+            navigateToHome = {
+                navController.popBackStack()
+                navController.navigate(Screen.Home.route)
+            }
+        )
         homeRoute()
         writeRoute()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.authenticationRoute() {
+fun NavGraphBuilder.authenticationRoute(
+    navigateToHome: () -> Unit
+) {
     composable(route = Screen.Authentication.route) {
         val viewModel: AuthenticationViewModel = viewModel()
+        val authenticatedState by viewModel.authenticatedState
         val loadingState by viewModel.loadingState
         val oneTapState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
 
         AuthenticationScreen(
+            authenticatedState = authenticatedState,
             loadingState = loadingState,
             oneTapState = oneTapState,
             messageBarState = messageBarState,
@@ -53,12 +74,8 @@ fun NavGraphBuilder.authenticationRoute() {
                 viewModel.signInWithMongoAtlas(
                     tokenId = tokenId,
                     onSuccess = {
-                        if (it) {
-                            messageBarState.addSuccess("Successfully logged in!")
-                            viewModel.setLoading(false)
-
-                            Log.d("Auth", tokenId)
-                        }
+                        messageBarState.addSuccess("Successfully logged in!")
+                        viewModel.setLoading(false)
                     },
                     onError = {
                         messageBarState.addError(it)
@@ -67,14 +84,31 @@ fun NavGraphBuilder.authenticationRoute() {
             },
             onDialogDismissed = { message ->
                 messageBarState.addError(Exception(message))
-            }
+                viewModel.setLoading(false)
+            },
+            navigateToHome = navigateToHome
         )
     }
 }
 
 fun NavGraphBuilder.homeRoute() {
     composable(route = Screen.Home.route) {
-
+        val scope = rememberCoroutineScope()
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    scope.launch(Dispatchers.IO) {
+                        App.create(APP_ID).currentUser?.logOut()
+                    }
+                }
+            ) {
+                Text(text = "Log out")
+            }
+        }
     }
 }
 
