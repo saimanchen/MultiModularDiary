@@ -1,7 +1,6 @@
 package com.example.diaryapp.presentation.screens.authentication
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -35,7 +34,6 @@ import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
 import com.stevdzasan.onetap.OneTapSignInWithGoogle
-import java.lang.Exception
 
 @ExperimentalMaterial3Api
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

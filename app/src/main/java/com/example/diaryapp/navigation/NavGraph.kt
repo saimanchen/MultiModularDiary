@@ -1,5 +1,6 @@
 package com.example.diaryapp.navigation
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -55,6 +56,8 @@ fun NavGraphBuilder.authenticationRoute() {
                         if (it) {
                             messageBarState.addSuccess("Successfully logged in!")
                             viewModel.setLoading(false)
+
+                            Log.d("Auth", tokenId)
                         }
                     },
                     onError = {
