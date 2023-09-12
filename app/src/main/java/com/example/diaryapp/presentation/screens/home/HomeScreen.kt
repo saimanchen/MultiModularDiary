@@ -17,21 +17,18 @@ import com.example.diaryapp.presentation.components.HomeTopBar
 @Composable
 fun HomeScreen(
     onLogOutClicked: () -> Unit,
-    navigateToAuthentication: () -> Unit,
     navigateToWrite: () -> Unit
 ) {
     Scaffold(
         topBar = {
-            HomeTopBar(onMenuClicked = {
-                onLogOutClicked()
-                navigateToAuthentication()
-            })
+            HomeTopBar(onMenuClicked = { onLogOutClicked() })
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = navigateToWrite,
                 shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.tertiary
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,

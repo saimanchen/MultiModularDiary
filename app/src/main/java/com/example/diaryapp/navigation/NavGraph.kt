@@ -3,7 +3,10 @@ package com.example.diaryapp.navigation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -11,6 +14,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.diaryapp.presentation.components.CustomAlertDialog
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
 import com.example.diaryapp.presentation.screens.home.HomeScreen
@@ -19,6 +23,7 @@ import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -97,15 +102,26 @@ fun NavGraphBuilder.homeRoute(
 ) {
     composable(route = Screen.Home.route) {
         val scope = rememberCoroutineScope()
+        var isSignOutDialogOpened by remember { mutableStateOf(false) }
 
         HomeScreen(
             onLogOutClicked = {
-                scope.launch {
-                    App.create(APP_ID).currentUser?.logOut()
-                }
+                isSignOutDialogOpened = true
             },
-            navigateToAuthentication = navigateToAuthentication,
             navigateToWrite = navigateToWrite
+        )
+
+        CustomAlertDialog(
+            title = "Sign Out",
+            message = "Do you want to sign out?",
+            isDialogOpened = isSignOutDialogOpened,
+            onCloseDialog = { isSignOutDialogOpened = false },
+            onConfirmClicked = {
+                scope.launch(Dispatchers.IO) {
+                    App.create(APP_ID).currentUser?.logOut()
+                    navigateToAuthentication()
+                }
+            }
         )
     }
 }
