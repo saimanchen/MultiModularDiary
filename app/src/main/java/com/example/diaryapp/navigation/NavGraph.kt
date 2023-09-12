@@ -3,6 +3,7 @@ package com.example.diaryapp.navigation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -13,9 +14,12 @@ import androidx.navigation.navArgument
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
 import com.example.diaryapp.presentation.screens.home.HomeScreen
+import com.example.diaryapp.util.Constants.APP_ID
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
+import io.realm.kotlin.mongodb.App
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @Composable
@@ -34,6 +38,10 @@ fun SetupNavGraph(
             }
         )
         homeRoute(
+            navigateToAuthentication = {
+                navController.popBackStack()
+                navController.navigate(Screen.Authentication.route)
+            },
             navigateToWrite = {
                 navController.navigate(Screen.Write.route)
             }
@@ -84,11 +92,19 @@ fun NavGraphBuilder.authenticationRoute(
 }
 
 fun NavGraphBuilder.homeRoute(
+    navigateToAuthentication: () -> Unit,
     navigateToWrite: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
+        val scope = rememberCoroutineScope()
+
         HomeScreen(
-            onMenuClicked = {},
+            onLogOutClicked = {
+                scope.launch {
+                    App.create(APP_ID).currentUser?.logOut()
+                }
+            },
+            navigateToAuthentication = navigateToAuthentication,
             navigateToWrite = navigateToWrite
         )
     }

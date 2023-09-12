@@ -16,12 +16,16 @@ import com.example.diaryapp.presentation.components.HomeTopBar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    onMenuClicked: () -> Unit,
+    onLogOutClicked: () -> Unit,
+    navigateToAuthentication: () -> Unit,
     navigateToWrite: () -> Unit
 ) {
     Scaffold(
         topBar = {
-            HomeTopBar(onMenuClicked = onMenuClicked)
+            HomeTopBar(onMenuClicked = {
+                onLogOutClicked()
+                navigateToAuthentication()
+            })
         },
         floatingActionButton = {
             FloatingActionButton(
