@@ -1,16 +1,8 @@
 package com.example.diaryapp.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -20,13 +12,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
-import com.example.diaryapp.util.Constants.APP_ID
+import com.example.diaryapp.presentation.screens.home.HomeScreen
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
-import io.realm.kotlin.mongodb.App
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @Composable
@@ -44,7 +33,11 @@ fun SetupNavGraph(
                 navController.navigate(Screen.Home.route)
             }
         )
-        homeRoute()
+        homeRoute(
+            navigateToWrite = {
+                navController.navigate(Screen.Write.route)
+            }
+        )
         writeRoute()
     }
 }
@@ -90,24 +83,14 @@ fun NavGraphBuilder.authenticationRoute(
     }
 }
 
-fun NavGraphBuilder.homeRoute() {
+fun NavGraphBuilder.homeRoute(
+    navigateToWrite: () -> Unit
+) {
     composable(route = Screen.Home.route) {
-        val scope = rememberCoroutineScope()
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.IO) {
-                        App.create(APP_ID).currentUser?.logOut()
-                    }
-                }
-            ) {
-                Text(text = "Log out")
-            }
-        }
+        HomeScreen(
+            onMenuClicked = {},
+            navigateToWrite = navigateToWrite
+        )
     }
 }
 
