@@ -18,6 +18,7 @@ import com.example.diaryapp.presentation.components.CustomAlertDialog
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
 import com.example.diaryapp.presentation.screens.home.HomeScreen
+import com.example.diaryapp.presentation.screens.home.HomeViewModel
 import com.example.diaryapp.util.Constants.APP_ID
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.stevdzasan.messagebar.rememberMessageBarState
@@ -101,10 +102,13 @@ fun NavGraphBuilder.homeRoute(
     navigateToWrite: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
+        val viewModel: HomeViewModel = viewModel()
+        val diaryEntries by viewModel.diaryEntries
         val scope = rememberCoroutineScope()
         var isSignOutDialogOpened by remember { mutableStateOf(false) }
 
         HomeScreen(
+            diaryEntries = diaryEntries,
             onLogOutClicked = {
                 isSignOutDialogOpened = true
             },
