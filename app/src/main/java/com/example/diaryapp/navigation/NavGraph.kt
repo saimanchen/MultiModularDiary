@@ -1,16 +1,13 @@
 package com.example.diaryapp.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -18,10 +15,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.diaryapp.presentation.components.CustomAlertDialog
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
+import com.example.diaryapp.presentation.screens.home.HomeScreen
+import com.example.diaryapp.presentation.screens.home.HomeViewModel
 import com.example.diaryapp.util.Constants.APP_ID
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
+import com.example.diaryapp.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
@@ -32,7 +33,8 @@ import java.lang.Exception
 @Composable
 fun SetupNavGraph(
     startDestination: String,
-    navController: NavHostController
+    navController: NavHostController,
+    onDataLoaded: () -> Unit
 ) {
     NavHost(
         startDestination = startDestination,
@@ -42,16 +44,27 @@ fun SetupNavGraph(
             navigateToHome = {
                 navController.popBackStack()
                 navController.navigate(Screen.Home.route)
-            }
+            },
+            onDataLoaded = onDataLoaded
         )
-        homeRoute()
+        homeRoute(
+            navigateToAuthentication = {
+                navController.popBackStack()
+                navController.navigate(Screen.Authentication.route)
+            },
+            navigateToWrite = {
+                navController.navigate(Screen.Write.route)
+            },
+            onDataLoaded = onDataLoaded
+        )
         writeRoute()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.authenticationRoute(
-    navigateToHome: () -> Unit
+    navigateToHome: () -> Unit,
+    onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Authentication.route) {
         val viewModel: AuthenticationViewModel = viewModel()
@@ -59,6 +72,10 @@ fun NavGraphBuilder.authenticationRoute(
         val loadingState by viewModel.loadingState
         val oneTapState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
+        
+        LaunchedEffect(key1 = Unit) {
+            onDataLoaded()
+        }
 
         AuthenticationScreen(
             authenticatedState = authenticatedState,
@@ -90,24 +107,43 @@ fun NavGraphBuilder.authenticationRoute(
     }
 }
 
-fun NavGraphBuilder.homeRoute() {
+fun NavGraphBuilder.homeRoute(
+    navigateToAuthentication: () -> Unit,
+    navigateToWrite: () -> Unit,
+    onDataLoaded: () -> Unit
+) {
     composable(route = Screen.Home.route) {
+        val viewModel: HomeViewModel = viewModel()
+        val diaryEntries by viewModel.diaryEntries
         val scope = rememberCoroutineScope()
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.IO) {
-                        App.create(APP_ID).currentUser?.logOut()
-                    }
-                }
-            ) {
-                Text(text = "Log out")
+        var isSignOutDialogOpened by remember { mutableStateOf(false) }
+
+        LaunchedEffect(key1 = diaryEntries) {
+            if (diaryEntries != RequestState.Loading) {
+                onDataLoaded()
             }
         }
+
+        HomeScreen(
+            diaryEntries = diaryEntries,
+            onLogOutClicked = {
+                isSignOutDialogOpened = true
+            },
+            navigateToWrite = navigateToWrite
+        )
+
+        CustomAlertDialog(
+            title = "Sign Out",
+            message = "Do you want to sign out?",
+            isDialogOpened = isSignOutDialogOpened,
+            onCloseDialog = { isSignOutDialogOpened = false },
+            onConfirmClicked = {
+                scope.launch(Dispatchers.IO) {
+                    App.create(APP_ID).currentUser?.logOut()
+                    navigateToAuthentication()
+                }
+            }
+        )
     }
 }
 
