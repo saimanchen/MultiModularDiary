@@ -83,4 +83,7 @@ dependencies {
 
     // Message Bar Compose
     implementation("com.github.stevdza-san:MessageBarCompose:1.0.5")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }

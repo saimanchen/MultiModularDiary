@@ -1,5 +1,6 @@
 package com.example.diaryapp.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +38,7 @@ import com.example.diaryapp.model.Diary
 import com.example.diaryapp.model.Mood
 import com.example.diaryapp.util.Elevation
 import com.example.diaryapp.util.toInstant
+import io.realm.kotlin.ext.realmListOf
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
@@ -46,8 +49,9 @@ fun DiaryContainer(
     diary: Diary,
     onClick: (String) -> Unit
 ) {
-    var localDensity = LocalDensity.current
+    val localDensity = LocalDensity.current
     var componentHeight by remember { mutableStateOf(0.dp) }
+    var isGalleryOpened by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier.clickable(
@@ -82,6 +86,18 @@ fun DiaryContainer(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
+                
+                if (diary.images.isNotEmpty()) {
+                    GalleryButton(
+                        isGalleryOpened = isGalleryOpened,
+                        onClick = { isGalleryOpened = !isGalleryOpened },
+                    )
+                }
+                AnimatedVisibility(visible = isGalleryOpened) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Gallery(images = diary.images)
+                    }
+                }
             }
         }
     }
@@ -118,6 +134,19 @@ fun DiaryHeader(
     }
 }
 
+@Composable
+fun GalleryButton(
+    isGalleryOpened: Boolean,
+    onClick: () -> Unit
+) {
+    TextButton(onClick = onClick) {
+        Text(
+            text = if (isGalleryOpened) "Hide Images" else "Show Images",
+            style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
+        )
+    }
+}
+
 @Preview
 @Composable
 fun DiaryContainerPreview() {
@@ -126,6 +155,7 @@ fun DiaryContainerPreview() {
             title = "My Diary"
             description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             mood = Mood.Angry.name
+            images = realmListOf("", "")
         },
         onClick = {}
     )
