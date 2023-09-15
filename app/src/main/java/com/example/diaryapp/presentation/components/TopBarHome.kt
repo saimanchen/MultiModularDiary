@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 
 @ExperimentalMaterial3Api
 @Composable
-fun HomeTopBar(onMenuClicked: () -> Unit) {
+fun TopBarHome(onMenuClicked: () -> Unit) {
     TopAppBar(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         navigationIcon = {

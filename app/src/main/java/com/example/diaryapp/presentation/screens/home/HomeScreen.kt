@@ -29,7 +29,7 @@ import com.example.diaryapp.model.Diary
 import com.example.diaryapp.presentation.components.DateHeader
 import com.example.diaryapp.presentation.components.DiaryContainer
 import com.example.diaryapp.presentation.components.EmptyHomeScreen
-import com.example.diaryapp.presentation.components.HomeTopBar
+import com.example.diaryapp.presentation.components.TopBarHome
 import com.example.diaryapp.util.RequestState
 import java.time.LocalDate
 
@@ -43,7 +43,7 @@ fun HomeScreen(
 ) {
     Scaffold(
         topBar = {
-            HomeTopBar(onMenuClicked = { onLogOutClicked() })
+            TopBarHome(onMenuClicked = { onLogOutClicked() })
         },
         floatingActionButton = {
             FloatingActionButton(
