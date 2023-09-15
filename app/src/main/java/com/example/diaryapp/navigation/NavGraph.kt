@@ -28,6 +28,7 @@ import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 @Composable
@@ -140,7 +141,10 @@ fun NavGraphBuilder.homeRoute(
             onConfirmClicked = {
                 scope.launch(Dispatchers.IO) {
                     App.create(APP_ID).currentUser?.logOut()
-                    navigateToAuthentication()
+
+                    withContext(Dispatchers.Main) {
+                        navigateToAuthentication()
+                    }
                 }
             }
         )
