@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,8 +29,7 @@ fun CustomAlertDialog(
     if (isDialogOpened) {
         AlertDialog(
             modifier = Modifier
-                .fillMaxWidth()
-                .border(BorderStroke(width = 1.dp, brush = SolidColor(Color.LightGray))),
+                .fillMaxWidth(),
             title = {
                 Text(
                     text = title,
@@ -45,7 +45,7 @@ fun CustomAlertDialog(
                     fontWeight = FontWeight.Normal
                 )
             },
-            shape = RoundedCornerShape(10.dp),
+            shape = Shapes().extraSmall,
             containerColor = MaterialTheme.colorScheme.background,
             confirmButton = {
                 Button(
