@@ -1,7 +1,6 @@
 package com.example.diaryapp.presentation.screens.write
 
 import android.annotation.SuppressLint
-import android.widget.Space
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +21,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -122,7 +120,7 @@ fun WriteContent(
             }
             Spacer(modifier = Modifier.height(24.dp))
             BoxWithConstraints {
-                var max = maxWidth
+                val max = maxWidth
                 Column {
                     TextField(
                         modifier = Modifier
@@ -158,8 +156,18 @@ fun WriteContent(
                             .offset(x = (-8).dp),
                         value = title,
                         onValueChange = onTitleChanged,
+                        textStyle = TextStyle(
+                            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            fontWeight = FontWeight.Light
+                        ),
                         placeholder = {
-                            Text(text = "Tell me about it!")
+                            Text(
+                                text = "Tell me about it!",
+                                style = TextStyle(
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                    fontWeight = FontWeight.Light
+                                )
+                            )
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color.Transparent,

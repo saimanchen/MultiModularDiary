@@ -39,7 +39,8 @@ import java.time.LocalDate
 fun HomeScreen(
     diaryEntries: DiaryEntries,
     onLogOutClicked: () -> Unit,
-    navigateToWrite: () -> Unit
+    navigateToWrite: () -> Unit,
+    navigateToWriteWithArgs: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -74,7 +75,7 @@ fun HomeScreen(
                     HomeContent(
                         paddingValues = it,
                         diaryEntries = diaryEntries.data,
-                        onClick = {}
+                        onClick = navigateToWriteWithArgs
                     )
                 }
 

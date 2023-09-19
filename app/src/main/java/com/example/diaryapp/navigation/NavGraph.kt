@@ -1,5 +1,6 @@
 package com.example.diaryapp.navigation
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +23,7 @@ import com.example.diaryapp.presentation.screens.authentication.AuthenticationVi
 import com.example.diaryapp.presentation.screens.home.HomeScreen
 import com.example.diaryapp.presentation.screens.home.HomeViewModel
 import com.example.diaryapp.presentation.screens.write.WriteScreen
+import com.example.diaryapp.presentation.screens.write.WriteViewModel
 import com.example.diaryapp.util.Constants.APP_ID
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.example.diaryapp.util.RequestState
@@ -58,7 +60,10 @@ fun SetupNavGraph(
             navigateToWrite = {
                 navController.navigate(Screen.Write.route)
             },
-            onDataLoaded = onDataLoaded
+            onDataLoaded = onDataLoaded,
+            navigateToWriteWithArgs = {
+                navController.navigate(Screen.Write.passDiaryId(diaryId = it))
+            }
         )
         writeRoute(
             navigateBack = {
@@ -117,6 +122,7 @@ fun NavGraphBuilder.authenticationRoute(
 fun NavGraphBuilder.homeRoute(
     navigateToAuthentication: () -> Unit,
     navigateToWrite: () -> Unit,
+    navigateToWriteWithArgs: (String) -> Unit,
     onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
@@ -136,7 +142,8 @@ fun NavGraphBuilder.homeRoute(
             onLogOutClicked = {
                 isSignOutDialogOpened = true
             },
-            navigateToWrite = navigateToWrite
+            navigateToWrite = navigateToWrite,
+            navigateToWriteWithArgs = navigateToWriteWithArgs
         )
 
         CustomAlertDialog(
@@ -168,6 +175,13 @@ fun NavGraphBuilder.writeRoute(
             defaultValue = null
         })
     ) {
+        val viewModel: WriteViewModel = viewModel()
+        val diaryState = viewModel.diaryState
+        
+        LaunchedEffect(key1 = diaryState, block = {
+            Log.d("DiaryId", "${diaryState.selectedDiaryId}")
+        })
+
         WriteScreen(
             selectedDiary = Diary().apply {
                 title = "Hello Diary!"
