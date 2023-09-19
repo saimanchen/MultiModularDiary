@@ -58,7 +58,10 @@ fun SetupNavGraph(
             navigateToWrite = {
                 navController.navigate(Screen.Write.route)
             },
-            onDataLoaded = onDataLoaded
+            onDataLoaded = onDataLoaded,
+            navigateToWriteWithArgs = {
+                navController.navigate(Screen.Write.passDiaryId(it))
+            }
         )
         writeRoute(
             navigateBack = {
@@ -117,6 +120,7 @@ fun NavGraphBuilder.authenticationRoute(
 fun NavGraphBuilder.homeRoute(
     navigateToAuthentication: () -> Unit,
     navigateToWrite: () -> Unit,
+    navigateToWriteWithArgs: (String) -> Unit,
     onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
@@ -136,7 +140,8 @@ fun NavGraphBuilder.homeRoute(
             onLogOutClicked = {
                 isSignOutDialogOpened = true
             },
-            navigateToWrite = navigateToWrite
+            navigateToWrite = navigateToWrite,
+            navigateToWriteWithArgs = navigateToWriteWithArgs
         )
 
         CustomAlertDialog(
