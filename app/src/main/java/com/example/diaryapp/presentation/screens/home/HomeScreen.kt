@@ -75,7 +75,7 @@ fun HomeScreen(
                     HomeContent(
                         paddingValues = it,
                         diaryEntries = diaryEntries.data,
-                        onClick = {}
+                        onClick = navigateToWriteWithArgs
                     )
                 }
 
