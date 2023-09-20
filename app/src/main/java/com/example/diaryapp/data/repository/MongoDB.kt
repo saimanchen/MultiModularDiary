@@ -6,13 +6,13 @@ import com.example.diaryapp.util.RequestState
 import com.example.diaryapp.util.toInstant
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
-import io.realm.kotlin.log.LogLevel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
 import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import org.mongodb.kbson.ObjectId
 import java.time.ZoneId
 
 object MongoDB : MongoDBRepository {
@@ -33,7 +33,6 @@ object MongoDB : MongoDBRepository {
                         name = "User's Diaries"
                     )
                 }
-                .log(level = LogLevel.ALL)
                 .build()
             realm = Realm.open(configuration)
         }
@@ -60,6 +59,18 @@ object MongoDB : MongoDBRepository {
         } else {
             flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
         }
+    }
+
+    override fun getSelectedDiary(diaryId: ObjectId): RequestState<Diary> {
+        return if (user != null) {
+            try {
+                val diary = realm.query<Diary>(query = "_id == $0", diaryId).find().first()
+                RequestState.Success(data = diary)
+            } catch (e: Exception) {
+                RequestState.Error(e)
+            }
+        } else
+            RequestState.Error(UserNotAuthenticatedException())
     }
 }
 

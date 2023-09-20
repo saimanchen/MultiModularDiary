@@ -33,6 +33,7 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.mongodb.kbson.ObjectId
 import java.lang.Exception
 
 @Composable
@@ -177,18 +178,21 @@ fun NavGraphBuilder.writeRoute(
     ) {
         val viewModel: WriteViewModel = viewModel()
         val diaryState = viewModel.diaryState
-        
+
         LaunchedEffect(key1 = diaryState, block = {
             Log.d("DiaryId", "${diaryState.selectedDiaryId}")
         })
 
         WriteScreen(
+            diaryState = diaryState,
             selectedDiary = Diary().apply {
                 title = "Hello Diary!"
                 description =
                     "My day started really bad, but when I saw You, it suddenly was much better."
             },
             navigateBack = navigateBack,
+            onTitleChanged = { viewModel.setTitle(it) },
+            onDescriptionChanged = { viewModel.setDescription(it) },
             onDeleteConfirmClicked = {}
         )
     }
