@@ -44,7 +44,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.diaryapp.R
 import com.example.diaryapp.model.Diary
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.TopBarWrite
@@ -228,7 +227,7 @@ fun WriteContent(
 fun ChangeMoodIconAction(
     moodIcon: Int,
 ) {
-    var moodIcon by remember { mutableStateOf(moodIcon) }
+    var mood by remember { mutableStateOf(moodIcon) }
     var isMoodDialogOpened by remember { mutableStateOf(false) }
 
     Icon(
@@ -237,13 +236,13 @@ fun ChangeMoodIconAction(
             .clickable {
                 isMoodDialogOpened = true
             },
-        painter = painterResource(id = moodIcon),
+        painter = painterResource(id = mood),
         contentDescription = "Choose Mood"
     )
 
     ChooseMoodIconDialog(
         isDialogOpened = isMoodDialogOpened,
         onDialogClosed = { isMoodDialogOpened = false },
-        onIconChosen = { moodIcon = it }
+        onIconChosen = { mood = it }
     )
 }
