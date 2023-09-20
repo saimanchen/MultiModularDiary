@@ -53,8 +53,11 @@ import com.example.diaryapp.presentation.components.TopBarWrite
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteScreen(
+    diaryState: DiaryState,
     selectedDiary: Diary?,
     navigateBack: () -> Unit,
+    onTitleChanged: (String) -> Unit,
+    onDescriptionChanged: (String) -> Unit,
     onDeleteConfirmClicked: () -> Unit
 ) {
     Scaffold(
@@ -67,10 +70,10 @@ fun WriteScreen(
         },
         content = {
             WriteContent(
-                title = "",
-                onTitleChanged = {},
-                description = "",
-                onDescriptionChanged = {},
+                title = diaryState.title,
+                onTitleChanged = onTitleChanged,
+                description = diaryState.description,
+                onDescriptionChanged = onDescriptionChanged,
                 paddingValues = it
             )
         }
@@ -118,7 +121,7 @@ fun WriteContent(
                 Spacer(modifier = Modifier.width(14.dp))
                 ChangeMoodIconAction()
             }
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp))
             BoxWithConstraints {
                 val max = maxWidth
                 Column {
@@ -129,8 +132,18 @@ fun WriteContent(
                             .offset(x = (-8).dp),
                         value = title,
                         onValueChange = onTitleChanged,
+                        textStyle = TextStyle(
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            fontWeight = FontWeight.Light
+                        ),
                         placeholder = {
-                            Text(text = "Title")
+                            Text(
+                                text = "Title",
+                                style = TextStyle(
+                                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                                    fontWeight = FontWeight.Light
+                                )
+                            )
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color.Transparent,
@@ -145,17 +158,15 @@ fun WriteContent(
                         keyboardActions = KeyboardActions(
                             onNext = {}
                         ),
-                        maxLines = 1,
-                        singleLine = true
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth()
                             .requiredWidth(max + 16.dp)
-                            .offset(x = (-8).dp),
-                        value = title,
-                        onValueChange = onTitleChanged,
+                            .offset(x = (-8).dp)
+                            .padding(vertical = 0.dp),
+                        value = description,
+                        onValueChange = onDescriptionChanged,
                         textStyle = TextStyle(
                             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             fontWeight = FontWeight.Light

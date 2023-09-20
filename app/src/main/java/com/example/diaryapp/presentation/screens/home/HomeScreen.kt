@@ -113,7 +113,7 @@ fun HomeContent(
 
                 items(
                     items = entries,
-                    key = { it._id.toString() }
+                    key = { it._id.toHexString() }
                 ) { entry ->
                     DiaryContainer(diary = entry, onClick = onClick)
                 }
