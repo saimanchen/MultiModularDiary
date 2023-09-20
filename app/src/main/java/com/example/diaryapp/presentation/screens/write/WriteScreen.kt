@@ -70,6 +70,7 @@ fun WriteScreen(
         },
         content = {
             WriteContent(
+                moodIcon = diaryState.mood.icon,
                 title = diaryState.title,
                 onTitleChanged = onTitleChanged,
                 description = diaryState.description,
@@ -83,6 +84,7 @@ fun WriteScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteContent(
+    moodIcon: Int,
     title: String,
     onTitleChanged: (String) -> Unit,
     description: String,
@@ -119,7 +121,7 @@ fun WriteContent(
                     )
                 )
                 Spacer(modifier = Modifier.width(14.dp))
-                ChangeMoodIconAction()
+                ChangeMoodIconAction(moodIcon = moodIcon)
             }
             Spacer(modifier = Modifier.height(48.dp))
             BoxWithConstraints {
@@ -223,8 +225,10 @@ fun WriteContent(
 }
 
 @Composable
-fun ChangeMoodIconAction() {
-    var moodIcon by remember { mutableStateOf(R.drawable.ic_mood_neutral) }
+fun ChangeMoodIconAction(
+    moodIcon: Int,
+) {
+    var moodIcon by remember { mutableStateOf(moodIcon) }
     var isMoodDialogOpened by remember { mutableStateOf(false) }
 
     Icon(
