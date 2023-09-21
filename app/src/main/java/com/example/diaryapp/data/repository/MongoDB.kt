@@ -70,8 +70,9 @@ object MongoDB : MongoDBRepository {
             } catch (e: Exception) {
                 flow { emit(RequestState.Error(e)) }
             }
-        } else
+        } else {
             flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
+        }
     }
 
     override suspend fun insertDiary(diary: Diary): RequestState<Diary> {
@@ -84,8 +85,29 @@ object MongoDB : MongoDBRepository {
                     RequestState.Error(e)
                 }
             }
-        } else
+        } else {
             RequestState.Error(UserNotAuthenticatedException())
+        }
+    }
+
+    override suspend fun updateDiaryEntry(diary: Diary): RequestState<Diary> {
+        return if (user != null) {
+            realm.write {
+                val queriedDiaryEntry = query<Diary>(query = "_id == $0", diary._id).first().find()
+                if (queriedDiaryEntry != null) {
+                    queriedDiaryEntry.title = diary.title
+                    queriedDiaryEntry.description = diary.description
+                    queriedDiaryEntry.mood = diary.mood
+                    queriedDiaryEntry.images = diary.images
+                    queriedDiaryEntry.date = diary.date
+                    RequestState.Success(data = queriedDiaryEntry)
+                } else {
+                    RequestState.Error(error = Exception("Queried entry does not exist."))
+                }
+            }
+        } else {
+            RequestState.Error(UserNotAuthenticatedException())
+        }
     }
 }
 
