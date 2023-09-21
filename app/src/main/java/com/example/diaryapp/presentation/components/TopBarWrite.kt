@@ -22,6 +22,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.diaryapp.model.Diary
+import com.example.diaryapp.util.toInstant
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +37,28 @@ fun TopBarWrite(
     navigateBack: () -> Unit,
     onDeleteConfirmClicked: () -> Unit
 ) {
+    val currentDate by remember { mutableStateOf(LocalDate.now()) }
+    val currentTime by remember { mutableStateOf(LocalTime.now()) }
+    val formattedDate = remember(key1 = currentDate) {
+        DateTimeFormatter
+            .ofPattern("dd MMM yyyy")
+            .format(currentDate)
+            .uppercase()
+    }
+    val formattedTime = remember(key1 = currentTime) {
+        DateTimeFormatter
+            .ofPattern("hh:mm a")
+            .format(currentTime)
+    }
+    val selectedDiaryDateTime = remember(selectedDiary) {
+        if (selectedDiary != null) {
+            SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
+                .format(Date.from(selectedDiary.date.toInstant())).uppercase()
+        } else {
+            "Not Specified"
+        }
+    }
+
     CenterAlignedTopAppBar(
         navigationIcon = {
             IconButton(onClick = navigateBack) {
@@ -43,7 +72,7 @@ fun TopBarWrite(
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = "15 SEP 2023, 19:26 PM",
+                text = if (selectedDiary != null) selectedDiaryDateTime else "$formattedDate, $formattedTime",
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
                     fontWeight = FontWeight.Light,

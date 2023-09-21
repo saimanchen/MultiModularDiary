@@ -185,11 +185,6 @@ fun NavGraphBuilder.writeRoute(
 
         WriteScreen(
             diaryState = diaryState,
-            selectedDiary = Diary().apply {
-                title = "Hello Diary!"
-                description =
-                    "My day started really bad, but when I saw You, it suddenly was much better."
-            },
             navigateBack = navigateBack,
             onTitleChanged = { viewModel.setTitle(it) },
             onDescriptionChanged = { viewModel.setDescription(it) },
