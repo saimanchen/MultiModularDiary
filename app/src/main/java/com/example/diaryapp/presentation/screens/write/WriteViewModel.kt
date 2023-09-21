@@ -11,7 +11,9 @@ import com.example.diaryapp.model.Diary
 import com.example.diaryapp.model.Mood
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.example.diaryapp.util.RequestState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 
 class WriteViewModel(
@@ -36,21 +38,21 @@ class WriteViewModel(
     private fun getSelectedDiary() {
         if (diaryState.selectedDiaryId != null) {
             viewModelScope.launch {
-                val diary = MongoDB.getSelectedDiary(
+                MongoDB.getSelectedDiary(
                     diaryId = ObjectId.invoke(diaryState.selectedDiaryId!!)
-                )
-
-                if (diary is RequestState.Success) {
-                    setSelectedDiary(diary = diary.data)
-                    setTitle(title = diary.data.title)
-                    setDescription(description = diary.data.description)
-                    setMood(mood = Mood.valueOf(diary.data.mood))
+                ).collect { diary ->
+                    if (diary is RequestState.Success) {
+                        setSelectedDiary(diary = diary.data)
+                        setTitle(title = diary.data.title)
+                        setDescription(description = diary.data.description)
+                        setMood(mood = Mood.valueOf(diary.data.mood))
+                    }
                 }
             }
         }
     }
 
-    fun setSelectedDiary(diary: Diary) {
+    private fun setSelectedDiary(diary: Diary) {
         diaryState = diaryState.copy(
             selectedDiary = diary
         )
@@ -66,6 +68,26 @@ class WriteViewModel(
 
     fun setMood(mood: Mood) {
         diaryState = diaryState.copy(mood = mood)
+    }
+
+    fun insertDiary(
+        diary: Diary,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = MongoDB.insertDiary(diary = diary)
+
+            if (result is RequestState.Success) {
+                withContext(Dispatchers.Main) {
+                    onSuccess()
+                }
+            } else if (result is RequestState.Error) {
+                withContext(Dispatchers.Main) {
+                    onError(result.error.message.toString())
+                }
+            }
+        }
     }
 }
 

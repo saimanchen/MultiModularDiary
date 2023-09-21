@@ -16,7 +16,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.diaryapp.model.Diary
 import com.example.diaryapp.presentation.components.CustomAlertDialog
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
@@ -33,7 +32,6 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.mongodb.kbson.ObjectId
 import java.lang.Exception
 
 @Composable
@@ -188,7 +186,15 @@ fun NavGraphBuilder.writeRoute(
             navigateBack = navigateBack,
             onTitleChanged = { viewModel.setTitle(it) },
             onDescriptionChanged = { viewModel.setDescription(it) },
-            onDeleteConfirmClicked = {}
+            onMoodIconChanged = { viewModel.setMood(mood = it) },
+            onDeleteConfirmClicked = {},
+            onSaveClicked = {
+                viewModel.insertDiary(
+                    diary = it,
+                    onSuccess = navigateBack,
+                    onError = {}
+                )
+            }
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.example.diaryapp.presentation.screens.write
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,11 +40,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.diaryapp.model.Diary
+import com.example.diaryapp.model.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.TopBarWrite
 
@@ -55,7 +59,9 @@ fun WriteScreen(
     navigateBack: () -> Unit,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onDeleteConfirmClicked: () -> Unit
+    onMoodIconChanged: (Mood) -> Unit,
+    onDeleteConfirmClicked: () -> Unit,
+    onSaveClicked: (Diary) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -67,12 +73,12 @@ fun WriteScreen(
         },
         content = {
             WriteContent(
-                moodIcon = diaryState.mood.icon,
-                title = diaryState.title,
+                diaryState = diaryState,
                 onTitleChanged = onTitleChanged,
-                description = diaryState.description,
                 onDescriptionChanged = onDescriptionChanged,
-                paddingValues = it
+                onMoodIconChanged = onMoodIconChanged,
+                paddingValues = it,
+                onSaveClicked = onSaveClicked
             )
         }
     )
@@ -81,13 +87,14 @@ fun WriteScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteContent(
-    moodIcon: Int,
-    title: String,
+    diaryState: DiaryState,
     onTitleChanged: (String) -> Unit,
-    description: String,
     onDescriptionChanged: (String) -> Unit,
-    paddingValues: PaddingValues
+    onMoodIconChanged: (Mood) -> Unit,
+    paddingValues: PaddingValues,
+    onSaveClicked: (Diary) -> Unit
 ) {
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
 
     Column(
@@ -118,7 +125,10 @@ fun WriteContent(
                     )
                 )
                 Spacer(modifier = Modifier.width(14.dp))
-                ChangeMoodIconAction(moodIcon = moodIcon)
+                ChangeMoodIconAction(
+                    diaryState = diaryState,
+                    onMoodIconChanged = onMoodIconChanged
+                )
             }
             Spacer(modifier = Modifier.height(48.dp))
             BoxWithConstraints {
@@ -129,7 +139,7 @@ fun WriteContent(
                             .fillMaxWidth()
                             .requiredWidth(max + 16.dp)
                             .offset(x = (-8).dp),
-                        value = title,
+                        value = diaryState.title,
                         onValueChange = onTitleChanged,
                         textStyle = TextStyle(
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
@@ -164,7 +174,7 @@ fun WriteContent(
                             .requiredWidth(max + 16.dp)
                             .offset(x = (-8).dp)
                             .padding(vertical = 0.dp),
-                        value = description,
+                        value = diaryState.description,
                         onValueChange = onDescriptionChanged,
                         textStyle = TextStyle(
                             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
@@ -201,7 +211,23 @@ fun WriteContent(
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    if (diaryState.title.isNotEmpty() && diaryState.description.isNotEmpty()) {
+                        onSaveClicked(
+                            Diary().apply {
+                                this.title = diaryState.title
+                                this.description = diaryState.description
+                                this.mood = diaryState.mood.name
+                            }
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Fields can't be empty",
+                            Toast.LENGTH_SHORT
+                            ).show()
+                    }
+                },
                 shape = Shapes().extraSmall,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
@@ -223,9 +249,9 @@ fun WriteContent(
 
 @Composable
 fun ChangeMoodIconAction(
-    moodIcon: Int,
+    diaryState: DiaryState,
+    onMoodIconChanged: (Mood) -> Unit
 ) {
-    var mood by remember { mutableStateOf(moodIcon) }
     var isMoodDialogOpened by remember { mutableStateOf(false) }
 
     Icon(
@@ -234,13 +260,13 @@ fun ChangeMoodIconAction(
             .clickable {
                 isMoodDialogOpened = true
             },
-        painter = painterResource(id = mood),
+        painter = painterResource(id = diaryState.mood.icon),
         contentDescription = "Choose Mood"
     )
 
     ChooseMoodIconDialog(
         isDialogOpened = isMoodDialogOpened,
         onDialogClosed = { isMoodDialogOpened = false },
-        onIconChosen = { mood = it }
+        onMoodIconChanged = onMoodIconChanged
     )
 }
