@@ -35,7 +35,7 @@ import com.example.diaryapp.util.Elevation
 @Composable
 fun ChooseMoodIconDialog(
     isDialogOpened: Boolean,
-    onIconChosen: (Int) -> Unit,
+    onMoodIconChanged: (Mood) -> Unit,
     onDialogClosed: () -> Unit
 ) {
     if (isDialogOpened) {
@@ -55,7 +55,7 @@ fun ChooseMoodIconDialog(
                     elevation = CardDefaults.elevatedCardElevation(Elevation.Level1),
                 ) {
                     ChooseMoodIconContent(
-                        onIconChosen = onIconChosen,
+                        onMoodIconChanged = onMoodIconChanged,
                         onDialogClosed = onDialogClosed
                     )
                 }
@@ -67,9 +67,9 @@ fun ChooseMoodIconDialog(
 
 @Composable
 fun MoodIcon(
-    resource: Int,
+    resource: Mood?,
     contentDescription: String?,
-    onIconChosen: (Int) -> Unit,
+    onMoodIconChanged: (Mood) -> Unit,
     onDialogClosed: () -> Unit,
 ) {
     Row(
@@ -78,15 +78,15 @@ fun MoodIcon(
     ) {
         Spacer(modifier = Modifier.width(4.dp))
 
-        if (resource != 0) {
+        if (resource != null) {
             Icon(
                 modifier = Modifier
                     .size(24.dp)
                     .clickable {
-                        onIconChosen(resource)
+                        onMoodIconChanged(resource)
                         onDialogClosed()
                     },
-                painter = painterResource(id = resource),
+                painter = painterResource(id = resource.icon),
                 contentDescription = contentDescription
             )
         } else {
@@ -98,7 +98,7 @@ fun MoodIcon(
 
 @Composable
 fun ChooseMoodIconContent(
-    onIconChosen: (Int) -> Unit,
+    onMoodIconChanged: (Mood) -> Unit,
     onDialogClosed: () -> Unit
 ) {
     Column(
@@ -122,45 +122,45 @@ fun ChooseMoodIconContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             MoodIcon(
-                resource = Mood.Angry.icon,
+                resource = Mood.Angry,
                 contentDescription = "Angry Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Confounded.icon,
+                resource = Mood.Confounded,
                 contentDescription = "Confounded Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Cool.icon,
+                resource = Mood.Cool,
                 contentDescription = "Cool Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Crying.icon,
+                resource = Mood.Crying,
                 contentDescription = "Crying Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Dead.icon,
+                resource = Mood.Dead,
                 contentDescription = "Dead Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Disappointed.icon,
+                resource = Mood.Disappointed,
                 contentDescription = "Disappointed Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Discouraged.icon,
+                resource = Mood.Discouraged,
                 contentDescription = "Discouraged Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
         }
@@ -171,45 +171,45 @@ fun ChooseMoodIconContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             MoodIcon(
-                resource = Mood.Disgusted.icon,
+                resource = Mood.Disgusted,
                 contentDescription = "Disgusted Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.VeryDisgusted.icon,
+                resource = Mood.VeryDisgusted,
                 contentDescription = "Very Disgusted Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Funny.icon,
+                resource = Mood.Funny,
                 contentDescription = "Funny Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Happy.icon,
+                resource = Mood.Happy,
                 contentDescription = "Happy Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.VeryHappy.icon,
+                resource = Mood.VeryHappy,
                 contentDescription = "Very Happy Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.LovingIt.icon,
+                resource = Mood.LovingIt,
                 contentDescription = "Loving It Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Neutral.icon,
+                resource = Mood.Neutral,
                 contentDescription = "Neutral Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
         }
@@ -220,45 +220,45 @@ fun ChooseMoodIconContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             MoodIcon(
-                resource = Mood.Stressed.icon,
+                resource = Mood.Stressed,
                 contentDescription = "Stressed Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Surprised.icon,
+                resource = Mood.Surprised,
                 contentDescription = "Surprised Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.Suspicious.icon,
+                resource = Mood.Suspicious,
                 contentDescription = "Suspicious Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = Mood.TiredBored.icon,
+                resource = Mood.TiredBored,
                 contentDescription = "Tired/Bored Icon",
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = 0,
+                resource = null,
                 contentDescription = null,
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = 0,
+                resource = null,
                 contentDescription = null,
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
-                resource = 0,
+                resource = null,
                 contentDescription = null,
-                onIconChosen = onIconChosen,
+                onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
         }
