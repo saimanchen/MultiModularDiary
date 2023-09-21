@@ -70,22 +70,61 @@ class WriteViewModel(
         diaryState = diaryState.copy(mood = mood)
     }
 
-    fun insertDiary(
+    private suspend fun insertDiary(
+        diary: Diary,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val result = MongoDB.insertDiary(diary = diary)
+
+        if (result is RequestState.Success) {
+            withContext(Dispatchers.Main) {
+                onSuccess()
+            }
+        } else if (result is RequestState.Error) {
+            withContext(Dispatchers.Main) {
+                onError(result.error.message.toString())
+            }
+        }
+    }
+
+    private suspend fun updateDiary(
+        diary: Diary,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val result = MongoDB.updateDiaryEntry(diary = diary.apply {
+            _id = ObjectId(diaryState.selectedDiaryId!!)
+            date = diaryState.selectedDiary!!.date
+        })
+
+        if (result is RequestState.Success) {
+            withContext(Dispatchers.Main) {
+                onSuccess()
+            }
+        } else if (result is RequestState.Error) {
+            onError(result.error.message.toString())
+        }
+    }
+
+    fun upsertDiary(
         diary: Diary,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = MongoDB.insertDiary(diary = diary)
-
-            if (result is RequestState.Success) {
-                withContext(Dispatchers.Main) {
-                    onSuccess()
-                }
-            } else if (result is RequestState.Error) {
-                withContext(Dispatchers.Main) {
-                    onError(result.error.message.toString())
-                }
+            if (diaryState.selectedDiaryId != null) {
+                updateDiary(
+                    diary = diary,
+                    onSuccess = onSuccess,
+                    onError = onError
+                )
+            } else {
+                insertDiary(
+                    diary = diary,
+                    onSuccess = onSuccess,
+                    onError = onError
+                )
             }
         }
     }

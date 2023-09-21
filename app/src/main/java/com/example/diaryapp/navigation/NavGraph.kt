@@ -189,7 +189,7 @@ fun NavGraphBuilder.writeRoute(
             onMoodIconChanged = { viewModel.setMood(mood = it) },
             onDeleteConfirmClicked = {},
             onSaveClicked = {
-                viewModel.insertDiary(
+                viewModel.upsertDiary(
                     diary = it,
                     onSuccess = navigateBack,
                     onError = {}
