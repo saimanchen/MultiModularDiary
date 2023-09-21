@@ -44,7 +44,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.diaryapp.model.Diary
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.TopBarWrite
 
@@ -53,7 +52,6 @@ import com.example.diaryapp.presentation.components.TopBarWrite
 @Composable
 fun WriteScreen(
     diaryState: DiaryState,
-    selectedDiary: Diary?,
     navigateBack: () -> Unit,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -62,7 +60,7 @@ fun WriteScreen(
     Scaffold(
         topBar = {
             TopBarWrite(
-                selectedDiary = selectedDiary,
+                selectedDiary = diaryState.selectedDiary,
                 navigateBack = navigateBack,
                 onDeleteConfirmClicked = onDeleteConfirmClicked
             )
