@@ -38,15 +38,15 @@ class WriteViewModel(
     private fun getSelectedDiary() {
         if (diaryState.selectedDiaryId != null) {
             viewModelScope.launch {
-                val diary = MongoDB.getSelectedDiary(
+                MongoDB.getSelectedDiary(
                     diaryId = ObjectId.invoke(diaryState.selectedDiaryId!!)
-                )
-
-                if (diary is RequestState.Success) {
-                    setSelectedDiary(diary = diary.data)
-                    setTitle(title = diary.data.title)
-                    setDescription(description = diary.data.description)
-                    setMood(mood = Mood.valueOf(diary.data.mood))
+                ).collect { diary ->
+                    if (diary is RequestState.Success) {
+                        setSelectedDiary(diary = diary.data)
+                        setTitle(title = diary.data.title)
+                        setDescription(description = diary.data.description)
+                        setMood(mood = Mood.valueOf(diary.data.mood))
+                    }
                 }
             }
         }
@@ -76,7 +76,7 @@ class WriteViewModel(
         onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = MongoDB.addNewDiary(diary = diary)
+            val result = MongoDB.insertDiary(diary = diary)
 
             if (result is RequestState.Success) {
                 withContext(Dispatchers.Main) {
