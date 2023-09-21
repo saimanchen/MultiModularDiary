@@ -95,6 +95,7 @@ class WriteViewModel(
     ) {
         val result = MongoDB.updateDiaryEntry(diary = diary.apply {
             _id = ObjectId(diaryState.selectedDiaryId!!)
+            date = diaryState.selectedDiary!!.date
         })
 
         if (result is RequestState.Success) {
