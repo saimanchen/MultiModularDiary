@@ -73,8 +73,12 @@ class WriteViewModel(
         diaryState = diaryState.copy(mood = mood)
     }
 
-    fun setDateTime(dateTime: ZonedDateTime) {
-        diaryState = diaryState.copy(dateTime = dateTime.toInstant().toRealmInstant())
+    fun setDateTime(dateTime: ZonedDateTime?) {
+        diaryState = if (dateTime != null) {
+            diaryState.copy(updatedDateTime = dateTime.toInstant().toRealmInstant())
+        } else {
+            diaryState.copy(updatedDateTime = null)
+        }
     }
 
     private suspend fun insertDiary(
@@ -82,7 +86,11 @@ class WriteViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        val result = MongoDB.insertDiary(diary = diary)
+        val result = MongoDB.insertDiary(diary = diary.apply {
+            if (diaryState.updatedDateTime != null) {
+                date = diaryState.updatedDateTime!!
+            }
+        })
 
         if (result is RequestState.Success) {
             withContext(Dispatchers.Main) {
@@ -102,7 +110,11 @@ class WriteViewModel(
     ) {
         val result = MongoDB.updateDiaryEntry(diary = diary.apply {
             _id = ObjectId(diaryState.selectedDiaryId!!)
-            date = diaryState.selectedDiary!!.date
+            date = if (diaryState.updatedDateTime != null) {
+                diaryState.updatedDateTime!!
+            } else {
+                diaryState.selectedDiary!!.date
+            }
         })
 
         if (result is RequestState.Success) {
@@ -143,5 +155,5 @@ data class DiaryState(
     val title: String = "",
     val description: String = "",
     val mood: Mood = Mood.Neutral,
-    val dateTime: RealmInstant? = null
+    val updatedDateTime: RealmInstant? = null
 )

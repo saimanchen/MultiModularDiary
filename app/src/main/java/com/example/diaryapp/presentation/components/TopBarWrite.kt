@@ -43,7 +43,7 @@ import java.util.Locale
 @Composable
 fun TopBarWrite(
     selectedDiary: Diary?,
-    onDateTimeUpdated: (ZonedDateTime) -> Unit,
+    onDateTimeUpdated: (ZonedDateTime?) -> Unit,
     navigateBack: () -> Unit,
     onDeleteConfirmClicked: () -> Unit
 ) {
@@ -105,6 +105,7 @@ fun TopBarWrite(
                     currentDate = LocalDate.now()
                     currentTime = LocalTime.now()
                     isDateTimeUpdated = false
+                    onDateTimeUpdated(null)
                 }) {
                     Icon(
                         imageVector = Icons.Default.Close,
