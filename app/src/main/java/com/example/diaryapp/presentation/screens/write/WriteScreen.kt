@@ -23,7 +23,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -50,9 +49,9 @@ import com.example.diaryapp.model.Diary
 import com.example.diaryapp.model.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.TopBarWrite
+import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteScreen(
     diaryState: DiaryState,
@@ -60,6 +59,7 @@ fun WriteScreen(
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onMoodIconChanged: (Mood) -> Unit,
+    onDateTimeUpdated: (ZonedDateTime?) -> Unit,
     onDeleteConfirmClicked: () -> Unit,
     onSaveClicked: (Diary) -> Unit
 ) {
@@ -68,7 +68,8 @@ fun WriteScreen(
             TopBarWrite(
                 selectedDiary = diaryState.selectedDiary,
                 navigateBack = navigateBack,
-                onDeleteConfirmClicked = onDeleteConfirmClicked
+                onDeleteConfirmClicked = onDeleteConfirmClicked,
+                onDateTimeUpdated = onDateTimeUpdated
             )
         },
         content = {
@@ -84,7 +85,6 @@ fun WriteScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteContent(
     diaryState: DiaryState,
@@ -154,12 +154,12 @@ fun WriteContent(
                                 )
                             )
                         },
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Unspecified,
                             disabledIndicatorColor = Color.Unspecified,
                             unfocusedIndicatorColor = Color.Unspecified,
-                            placeholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         ),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
@@ -189,12 +189,12 @@ fun WriteContent(
                                 )
                             )
                         },
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Unspecified,
                             disabledIndicatorColor = Color.Unspecified,
                             unfocusedIndicatorColor = Color.Unspecified,
-                            placeholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         ),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
