@@ -50,6 +50,7 @@ import com.example.diaryapp.model.Diary
 import com.example.diaryapp.model.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.TopBarWrite
+import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +61,7 @@ fun WriteScreen(
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onMoodIconChanged: (Mood) -> Unit,
+    onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onDeleteConfirmClicked: () -> Unit,
     onSaveClicked: (Diary) -> Unit
 ) {
@@ -68,7 +70,8 @@ fun WriteScreen(
             TopBarWrite(
                 selectedDiary = diaryState.selectedDiary,
                 navigateBack = navigateBack,
-                onDeleteConfirmClicked = onDeleteConfirmClicked
+                onDeleteConfirmClicked = onDeleteConfirmClicked,
+                onDateTimeUpdated = onDateTimeUpdated
             )
         },
         content = {
@@ -154,12 +157,12 @@ fun WriteContent(
                                 )
                             )
                         },
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Unspecified,
                             disabledIndicatorColor = Color.Unspecified,
                             unfocusedIndicatorColor = Color.Unspecified,
-                            placeholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         ),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
@@ -189,12 +192,12 @@ fun WriteContent(
                                 )
                             )
                         },
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Unspecified,
                             disabledIndicatorColor = Color.Unspecified,
                             unfocusedIndicatorColor = Color.Unspecified,
-                            placeholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                         ),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
