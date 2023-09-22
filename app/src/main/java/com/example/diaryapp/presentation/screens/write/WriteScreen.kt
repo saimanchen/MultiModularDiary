@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
@@ -100,9 +102,10 @@ fun WriteContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
+            .navigationBarsPadding()
             .padding(
-                top = paddingValues.calculateTopPadding(),
-                bottom = paddingValues.calculateBottomPadding() + 24.dp,
+                top = paddingValues.calculateTopPadding()
             )
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.SpaceBetween
