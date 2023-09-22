@@ -14,6 +14,7 @@ import com.example.diaryapp.util.RequestState
 import com.example.diaryapp.util.toRealmInstant
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
@@ -41,16 +42,18 @@ class WriteViewModel(
     private fun getSelectedDiary() {
         if (diaryState.selectedDiaryId != null) {
             viewModelScope.launch {
-                MongoDB.getSelectedDiary(
-                    diaryId = ObjectId.invoke(diaryState.selectedDiaryId!!)
-                ).collect { diary ->
-                    if (diary is RequestState.Success) {
-                        setSelectedDiary(diary = diary.data)
-                        setTitle(title = diary.data.title)
-                        setDescription(description = diary.data.description)
-                        setMood(mood = Mood.valueOf(diary.data.mood))
+                MongoDB.getSelectedDiaryEntry(diaryId = ObjectId.invoke(diaryState.selectedDiaryId!!))
+                    .catch {
+                        emit(RequestState.Error(Exception("Diary entry is already deleted")))
                     }
-                }
+                    .collect { diary ->
+                        if (diary is RequestState.Success) {
+                            setSelectedDiary(diary = diary.data)
+                            setTitle(title = diary.data.title)
+                            setDescription(description = diary.data.description)
+                            setMood(mood = Mood.valueOf(diary.data.mood))
+                        }
+                    }
             }
         }
     }
@@ -86,7 +89,7 @@ class WriteViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        val result = MongoDB.insertDiary(diary = diary.apply {
+        val result = MongoDB.insertDiaryEntry(diary = diary.apply {
             if (diaryState.updatedDateTime != null) {
                 date = diaryState.updatedDateTime!!
             }
@@ -144,6 +147,22 @@ class WriteViewModel(
                     onSuccess = onSuccess,
                     onError = onError
                 )
+            }
+        }
+    }
+
+    fun deleteDiaryEntry(
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (diaryState.selectedDiaryId != null) {
+                val result = MongoDB.deleteDiaryEntry(id = ObjectId(diaryState.selectedDiaryId!!))
+                if (result is RequestState.Success) {
+                    withContext(Dispatchers.Main) { onSuccess() }
+                } else if (result is RequestState.Error) {
+                    withContext(Dispatchers.IO) { onError(result.error.message.toString()) }
+                }
             }
         }
     }

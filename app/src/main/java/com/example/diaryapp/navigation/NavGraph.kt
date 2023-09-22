@@ -1,6 +1,7 @@
 package com.example.diaryapp.navigation
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -174,6 +176,7 @@ fun NavGraphBuilder.writeRoute(
             defaultValue = null
         })
     ) {
+        val context = LocalContext.current
         val viewModel: WriteViewModel = viewModel()
         val diaryState = viewModel.diaryState
 
@@ -187,13 +190,37 @@ fun NavGraphBuilder.writeRoute(
             onTitleChanged = { viewModel.setTitle(it) },
             onDescriptionChanged = { viewModel.setDescription(it) },
             onMoodIconChanged = { viewModel.setMood(mood = it) },
-            onDeleteConfirmClicked = {},
-            onDateTimeUpdated = { viewModel.setDateTime(it)},
+            onDeleteConfirmClicked = {
+                viewModel.deleteDiaryEntry(
+                    onSuccess = {
+                        Toast.makeText(
+                            context,
+                            "Diary entry is now deleted",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateBack()
+                    },
+                    onError = { message ->
+                        Toast.makeText(
+                            context,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
+            },
+            onDateTimeUpdated = { viewModel.setDateTime(it) },
             onSaveClicked = {
                 viewModel.upsertDiary(
                     diary = it,
                     onSuccess = navigateBack,
-                    onError = {}
+                    onError = {message ->
+                        Toast.makeText(
+                            context,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
             }
         )
