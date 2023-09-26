@@ -1,5 +1,8 @@
 package com.example.diaryapp.presentation.components
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
@@ -25,6 +28,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.diaryapp.model.GalleryImage
+import com.example.diaryapp.util.GalleryState
 import kotlin.math.max
 
 @Composable
@@ -78,6 +83,70 @@ fun Gallery(
         }
     }
 }
+
+@Composable
+fun GalleryUploader(
+    modifier: Modifier = Modifier,
+    galleryState: GalleryState,
+    imageSize: Dp,
+    imageShape: CornerBasedShape = Shapes().extraSmall,
+    spaceBetween: Dp = 12.dp,
+    onAddClicked: () -> Unit,
+    onImageSelected: (Uri) -> Unit,
+    onImageClicked: (GalleryImage) -> Unit
+) {
+    val multiplePhotoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 8),
+    ) { images ->
+        images.forEach {
+            onImageSelected(it)
+        }
+    }
+
+    BoxWithConstraints(modifier = modifier) {
+        val numberOfVisibleImages = remember {
+            derivedStateOf {
+                max(
+                    a = 0,
+                    b = this.maxWidth.div(spaceBetween + imageSize).toInt().minus(2)
+                )
+            }
+        }
+
+        val remainingImages = remember {
+            derivedStateOf {
+                galleryState.images.size - numberOfVisibleImages.value
+            }
+        }
+
+        Row {
+            galleryState.images.take(numberOfVisibleImages.value).forEach { image ->
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(imageShape)
+                        .size(imageSize),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(image)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "Gallery Image",
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.width(spaceBetween))
+            }
+
+            if (remainingImages.value > 0) {
+                RemainingImagesBox(
+                    imageSize = imageSize,
+                    remainingImages = remainingImages.value,
+                    imageShape = imageShape
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun RemainingImagesBox(
