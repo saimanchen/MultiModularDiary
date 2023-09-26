@@ -242,7 +242,7 @@ fun WriteContent(
             GalleryUploader(
                 galleryState = galleryState,
                 imageSize = 40.dp,
-                onAddClicked = {},
+                onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
                 onImageClicked = {}
             )
