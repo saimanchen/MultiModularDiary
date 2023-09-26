@@ -1,6 +1,7 @@
 package com.example.diaryapp.presentation.screens.write
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -54,7 +55,9 @@ import androidx.compose.ui.unit.dp
 import com.example.diaryapp.model.Diary
 import com.example.diaryapp.model.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
+import com.example.diaryapp.presentation.components.GalleryUploader
 import com.example.diaryapp.presentation.components.TopBarWrite
+import com.example.diaryapp.util.GalleryState
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
@@ -62,13 +65,15 @@ import java.time.ZonedDateTime
 @Composable
 fun WriteScreen(
     diaryState: DiaryState,
+    galleryState: GalleryState,
     navigateBack: () -> Unit,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onMoodIconChanged: (Mood) -> Unit,
     onDateTimeUpdated: (ZonedDateTime?) -> Unit,
     onDeleteConfirmClicked: () -> Unit,
-    onSaveClicked: (Diary) -> Unit
+    onSaveClicked: (Diary) -> Unit,
+    onImageSelected: (Uri) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -82,11 +87,13 @@ fun WriteScreen(
         content = {
             WriteContent(
                 diaryState = diaryState,
+                galleryState = galleryState,
                 onTitleChanged = onTitleChanged,
                 onDescriptionChanged = onDescriptionChanged,
                 onMoodIconChanged = onMoodIconChanged,
                 paddingValues = it,
-                onSaveClicked = onSaveClicked
+                onSaveClicked = onSaveClicked,
+                onImageSelected = onImageSelected
             )
         }
     )
@@ -95,11 +102,13 @@ fun WriteScreen(
 @Composable
 fun WriteContent(
     diaryState: DiaryState,
+    galleryState: GalleryState,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onMoodIconChanged: (Mood) -> Unit,
     paddingValues: PaddingValues,
-    onSaveClicked: (Diary) -> Unit
+    onSaveClicked: (Diary) -> Unit,
+    onImageSelected: (Uri) -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -229,6 +238,14 @@ fun WriteContent(
         }
 
         Column(verticalArrangement = Arrangement.Bottom) {
+            Spacer(modifier = Modifier.height(12.dp))
+            GalleryUploader(
+                galleryState = galleryState,
+                imageSize = 40.dp,
+                onAddClicked = {},
+                onImageSelected = onImageSelected,
+                onImageClicked = {}
+            )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),

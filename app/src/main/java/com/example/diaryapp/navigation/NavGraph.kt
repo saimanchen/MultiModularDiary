@@ -18,6 +18,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.presentation.components.CustomAlertDialog
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
@@ -28,6 +29,7 @@ import com.example.diaryapp.presentation.screens.write.WriteViewModel
 import com.example.diaryapp.util.Constants.APP_ID
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.example.diaryapp.util.RequestState
+import com.example.diaryapp.util.rememberGalleryState
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
@@ -179,6 +181,7 @@ fun NavGraphBuilder.writeRoute(
         val context = LocalContext.current
         val viewModel: WriteViewModel = viewModel()
         val diaryState = viewModel.diaryState
+        val galleryState = rememberGalleryState()
 
         LaunchedEffect(key1 = diaryState, block = {
             Log.d("DiaryId", "${diaryState.selectedDiaryId}")
@@ -186,6 +189,7 @@ fun NavGraphBuilder.writeRoute(
 
         WriteScreen(
             diaryState = diaryState,
+            galleryState = galleryState,
             navigateBack = navigateBack,
             onTitleChanged = { viewModel.setTitle(it) },
             onDescriptionChanged = { viewModel.setDescription(it) },
@@ -221,6 +225,14 @@ fun NavGraphBuilder.writeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                )
+            },
+            onImageSelected = {
+                galleryState.addImage(
+                    GalleryImage(
+                        image = it,
+                        remoteImagePath = ""
+                    )
                 )
             }
         )
