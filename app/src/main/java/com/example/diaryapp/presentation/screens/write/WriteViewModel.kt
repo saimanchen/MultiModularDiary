@@ -1,7 +1,6 @@
 package com.example.diaryapp.presentation.screens.write
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -179,8 +178,6 @@ class WriteViewModel(
     ) {
         val remoteImagePath = "images/${FirebaseAuth.getInstance().currentUser?.uid}/" +
                 "${image.lastPathSegment}-${System.currentTimeMillis()}.${imageType}"
-
-        Log.d("imagePath", remoteImagePath)
 
         galleryState.addImage(
             GalleryImage(
