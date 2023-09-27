@@ -14,8 +14,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-     @Provides
      @Singleton
+     @Provides
      fun provideDatabase(@ApplicationContext context: Context): ImagesDatabase {
          return Room.databaseBuilder(
              context = context,
@@ -24,7 +24,7 @@ object DatabaseModule {
          ).build()
      }
 
-    @Provides
     @Singleton
+    @Provides
     fun provideFirstDao(database: ImagesDatabase) = database.imageToUploadDao()
 }

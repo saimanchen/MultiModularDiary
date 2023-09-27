@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.diaryapp.data.repository.MongoDB
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.GalleryImage
+import com.example.diaryapp.model.local.ImagesToUploadDao
+import com.example.diaryapp.model.local.entity.ImageToUpload
 import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.example.diaryapp.util.GalleryState
@@ -20,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -27,9 +30,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
+import javax.inject.Inject
 
-class WriteViewModel(
-    private val savedStateHandle: SavedStateHandle
+@HiltViewModel
+class WriteViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val imagesToUploadDao: ImagesToUploadDao
 ) : ViewModel() {
     var diaryState by mutableStateOf(DiaryState())
         private set
@@ -199,6 +205,20 @@ class WriteViewModel(
         galleryState.images.forEach { galleryImage ->
             val imagePath = storage.child(galleryImage.remoteImagePath)
             imagePath.putFile(galleryImage.image)
+                .addOnProgressListener {
+                    val sessionUri = it.uploadSessionUri
+                    if (sessionUri != null) {
+                        viewModelScope.launch(Dispatchers.IO) {
+                            imagesToUploadDao.addImageToUpload(
+                                ImageToUpload(
+                                    remoteImagePath = galleryImage.remoteImagePath,
+                                    imageUri = galleryImage.image.toString(),
+                                    sessionUri = sessionUri.toString()
+                                ),
+                            )
+                        }
+                    }
+                }
         }
     }
 
