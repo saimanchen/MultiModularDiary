@@ -102,6 +102,7 @@ class WriteViewModel(
         })
 
         if (result is RequestState.Success) {
+            uploadImagesToFirebase()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }
@@ -127,6 +128,7 @@ class WriteViewModel(
         })
 
         if (result is RequestState.Success) {
+            uploadImagesToFirebase()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }
