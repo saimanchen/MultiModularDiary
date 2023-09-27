@@ -16,6 +16,7 @@ import com.example.diaryapp.util.GalleryState
 import com.example.diaryapp.util.RequestState
 import com.example.diaryapp.util.toRealmInstant
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -172,7 +173,7 @@ class WriteViewModel(
         }
     }
 
-    fun addImage(
+    fun generateImagePathAndAddToGalleryStateList(
         image: Uri,
         imageType: String
     ) {
@@ -185,6 +186,14 @@ class WriteViewModel(
                 remoteImagePath = remoteImagePath
             )
         )
+    }
+
+    private fun uploadImagesToFirebase() {
+        val storage = FirebaseStorage.getInstance().reference
+        galleryState.images.forEach { galleryImage ->
+            val imagePath = storage.child(galleryImage.remoteImagePath)
+            imagePath.putFile(galleryImage.image)
+        }
     }
 }
 
