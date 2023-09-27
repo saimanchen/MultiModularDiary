@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.diaryapp.data.repository.DiaryEntries
-import com.example.diaryapp.model.Diary
+import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.presentation.components.DateHeader
 import com.example.diaryapp.presentation.components.DiaryContainer
 import com.example.diaryapp.presentation.components.EmptyHomeScreen

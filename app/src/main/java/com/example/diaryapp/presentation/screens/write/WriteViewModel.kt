@@ -8,9 +8,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diaryapp.data.repository.MongoDB
-import com.example.diaryapp.model.Diary
+import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.GalleryImage
-import com.example.diaryapp.model.Mood
+import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.example.diaryapp.util.GalleryState
 import com.example.diaryapp.util.RequestState
@@ -66,30 +66,6 @@ class WriteViewModel(
                     }
             }
         }
-    }
-
-    private fun getImagesFromFirebase(diary: RequestState<Diary>) {
-        if (diary is RequestState.Success) {
-            fetchImagesFromFirebase(
-                remoteImagePaths = diary.data.images,
-                onImageDownload = { downloadedImage ->
-                    galleryState.addImage(
-                        GalleryImage(
-                            image = downloadedImage,
-                            remoteImagePath = extractRemoteImagePath(
-                                remotePath = downloadedImage.toString()
-                            )
-                        )
-                    )
-                }
-            )
-        }
-    }
-
-    private fun extractRemoteImagePath(remotePath: String): String {
-        val chunks = remotePath.split("%2F")
-        val imageName = chunks[2].split("?").first()
-        return "images/${Firebase.auth.currentUser?.uid}/$imageName"
     }
 
     private fun setSelectedDiary(diary: Diary) {
@@ -224,6 +200,30 @@ class WriteViewModel(
             val imagePath = storage.child(galleryImage.remoteImagePath)
             imagePath.putFile(galleryImage.image)
         }
+    }
+
+    private fun getImagesFromFirebase(diary: RequestState<Diary>) {
+        if (diary is RequestState.Success) {
+            fetchImagesFromFirebase(
+                remoteImagePaths = diary.data.images,
+                onImageDownload = { downloadedImage ->
+                    galleryState.addImage(
+                        GalleryImage(
+                            image = downloadedImage,
+                            remoteImagePath = extractRemoteImagePath(
+                                remotePath = downloadedImage.toString()
+                            )
+                        )
+                    )
+                }
+            )
+        }
+    }
+
+    private fun extractRemoteImagePath(remotePath: String): String {
+        val chunks = remotePath.split("%2F")
+        val imageName = chunks[2].split("?").first()
+        return "images/${Firebase.auth.currentUser?.uid}/$imageName"
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.diaryapp.model
+package com.example.diaryapp.model.remote
 
 import androidx.compose.ui.graphics.Color
 import com.example.diaryapp.R

@@ -52,8 +52,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.diaryapp.model.Diary
-import com.example.diaryapp.model.Mood
+import com.example.diaryapp.model.remote.Diary
+import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.GalleryUploader
 import com.example.diaryapp.presentation.components.TopBarWrite
