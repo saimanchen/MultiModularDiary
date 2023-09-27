@@ -1,5 +1,7 @@
 package com.example.diaryapp.presentation.screens.write
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,10 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diaryapp.data.repository.MongoDB
 import com.example.diaryapp.model.Diary
+import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.model.Mood
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
+import com.example.diaryapp.util.GalleryState
 import com.example.diaryapp.util.RequestState
 import com.example.diaryapp.util.toRealmInstant
+import com.google.firebase.auth.FirebaseAuth
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -25,6 +30,7 @@ class WriteViewModel(
 ) : ViewModel() {
     var diaryState by mutableStateOf(DiaryState())
         private set
+    val galleryState = GalleryState()
 
     init {
         getDiaryIdArgument()
@@ -165,6 +171,23 @@ class WriteViewModel(
                 }
             }
         }
+    }
+
+    fun addImage(
+        image: Uri,
+        imageType: String
+    ) {
+        val remoteImagePath = "images/${FirebaseAuth.getInstance().currentUser?.uid}/" +
+                "${image.lastPathSegment}-${System.currentTimeMillis()}.${imageType}"
+
+        Log.d("imagePath", remoteImagePath)
+
+        galleryState.addImage(
+            GalleryImage(
+                image = image,
+                remoteImagePath = remoteImagePath
+            )
+        )
     }
 }
 
