@@ -14,8 +14,11 @@ import com.example.diaryapp.model.Mood
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.example.diaryapp.util.GalleryState
 import com.example.diaryapp.util.RequestState
+import com.example.diaryapp.util.fetchImagesFromFirebase
 import com.example.diaryapp.util.toRealmInstant
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.Dispatchers
@@ -58,10 +61,35 @@ class WriteViewModel(
                             setTitle(title = diary.data.title)
                             setDescription(description = diary.data.description)
                             setMood(mood = Mood.valueOf(diary.data.mood))
+                            getImagesFromFirebase(diary = diary)
                         }
                     }
             }
         }
+    }
+
+    private fun getImagesFromFirebase(diary: RequestState<Diary>) {
+        if (diary is RequestState.Success) {
+            fetchImagesFromFirebase(
+                remoteImagePaths = diary.data.images,
+                onImageDownload = { downloadedImage ->
+                    galleryState.addImage(
+                        GalleryImage(
+                            image = downloadedImage,
+                            remoteImagePath = extractRemoteImagePath(
+                                remotePath = downloadedImage.toString()
+                            )
+                        )
+                    )
+                }
+            )
+        }
+    }
+
+    private fun extractRemoteImagePath(remotePath: String): String {
+        val chunks = remotePath.split("%2F")
+        val imageName = chunks[2].split("?").first()
+        return "images/${Firebase.auth.currentUser?.uid}/$imageName"
     }
 
     private fun setSelectedDiary(diary: Diary) {

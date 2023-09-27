@@ -1,5 +1,7 @@
 package com.example.diaryapp.presentation.components
 
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -24,7 +26,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -41,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.example.diaryapp.model.Diary
 import com.example.diaryapp.model.Mood
 import com.example.diaryapp.util.Elevation
+import com.example.diaryapp.util.fetchImagesFromFirebase
 import com.example.diaryapp.util.toInstant
 import io.realm.kotlin.ext.realmListOf
 import java.text.SimpleDateFormat
@@ -54,8 +60,37 @@ fun DiaryContainer(
     onClick: (String) -> Unit
 ) {
     val localDensity = LocalDensity.current
+    val context = LocalContext.current
     var componentHeight by remember { mutableStateOf(0.dp) }
     var isGalleryOpened by remember { mutableStateOf(false) }
+    var isGalleryLoading by remember { mutableStateOf(false) }
+    val downloadedImages = remember { mutableStateListOf<Uri>() }
+
+    LaunchedEffect(key1 = isGalleryOpened) {
+        if (isGalleryOpened && downloadedImages.isEmpty()) {
+            isGalleryLoading = true
+            fetchImagesFromFirebase(
+                remoteImagePaths = diary.images,
+                onImageDownload = { image ->
+                    downloadedImages.add(image)
+                },
+                onImageDownloadFailed = {
+                    Toast.makeText(
+                        context,
+                        "Images not uploaded yet." +
+                                "Wait a little bit, or try to upload again",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    isGalleryLoading = false
+                    isGalleryOpened = false
+                },
+                onReadyToDisplay = {
+                    isGalleryLoading = false
+                    isGalleryOpened = true
+                }
+            )
+        }
+    }
 
     Row(
         modifier = Modifier.clickable(
@@ -90,9 +125,10 @@ fun DiaryContainer(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
-                
+
                 if (diary.images.isNotEmpty()) {
                     GalleryButton(
+                        isGalleryLoading = isGalleryLoading,
                         isGalleryOpened = isGalleryOpened,
                         onClick = { isGalleryOpened = !isGalleryOpened },
                     )
@@ -107,7 +143,7 @@ fun DiaryContainer(
                     )
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
-                        Gallery(images = diary.images)
+                        Gallery(images = downloadedImages)
                     }
                 }
             }
@@ -148,12 +184,17 @@ fun DiaryHeader(
 
 @Composable
 fun GalleryButton(
+    isGalleryLoading: Boolean,
     isGalleryOpened: Boolean,
     onClick: () -> Unit
 ) {
     TextButton(onClick = onClick) {
         Text(
-            text = if (isGalleryOpened) "Hide Images" else "Show Images",
+            text = if (isGalleryOpened) {
+                if (isGalleryLoading) "Loading" else "Hide Gallery"
+            } else {
+                "Show Gallery"
+            },
             style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
         )
     }
@@ -165,7 +206,8 @@ fun DiaryContainerPreview() {
     DiaryContainer(
         diary = Diary().apply {
             title = "My Diary"
-            description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            description =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             mood = Mood.Angry.name
             images = realmListOf("", "")
         },
