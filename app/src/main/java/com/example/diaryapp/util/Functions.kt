@@ -18,7 +18,7 @@ fun fetchImagesFromFirebase(
                     .addOnSuccessListener {
                         onImageDownload(it)
                         if (remoteImagePaths.lastIndexOf(remoteImagePaths.last()) == index) {
-                            onReadyToDisplay
+                            onReadyToDisplay()
                         }
                     }.addOnFailureListener {
                         onImageDownloadFailed(it)

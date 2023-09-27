@@ -128,6 +128,7 @@ fun DiaryContainer(
 
                 if (diary.images.isNotEmpty()) {
                     GalleryButton(
+                        isGalleryLoading = isGalleryLoading,
                         isGalleryOpened = isGalleryOpened,
                         onClick = { isGalleryOpened = !isGalleryOpened },
                     )
@@ -183,12 +184,17 @@ fun DiaryHeader(
 
 @Composable
 fun GalleryButton(
+    isGalleryLoading: Boolean,
     isGalleryOpened: Boolean,
     onClick: () -> Unit
 ) {
     TextButton(onClick = onClick) {
         Text(
-            text = if (isGalleryOpened) "Hide Images" else "Show Images",
+            text = if (isGalleryOpened) {
+                if (isGalleryLoading) "Loading" else "Hide Gallery"
+            } else {
+                "Show Gallery"
+            },
             style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
         )
     }
