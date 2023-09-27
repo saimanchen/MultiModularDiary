@@ -134,7 +134,7 @@ fun DiaryContainer(
                     )
                 }
                 AnimatedVisibility(
-                    visible = isGalleryOpened,
+                    visible = isGalleryOpened && !isGalleryLoading,
                     enter = fadeIn() + expandVertically(
                         animationSpec = spring(
                             dampingRatio = Spring.DampingRatioMediumBouncy,
