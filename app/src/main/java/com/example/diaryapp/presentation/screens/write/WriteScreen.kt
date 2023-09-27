@@ -58,6 +58,7 @@ import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.GalleryUploader
 import com.example.diaryapp.presentation.components.TopBarWrite
 import com.example.diaryapp.util.GalleryState
+import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
@@ -256,6 +257,7 @@ fun WriteContent(
                                 this.title = diaryState.title
                                 this.description = diaryState.description
                                 this.mood = diaryState.mood.name
+                                this.images = galleryState.images.map { it.remoteImagePath }.toRealmList()
                             }
                         )
                     } else {
