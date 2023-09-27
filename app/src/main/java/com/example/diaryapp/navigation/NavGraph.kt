@@ -233,7 +233,7 @@ fun NavGraphBuilder.writeRoute(
             onImageSelected = {
                 val imageType = context.contentResolver.getType(it)?.split("/")?.last() ?: "jpg"
 
-                viewModel.addImage(
+                viewModel.generateImagePathAndAddToGalleryStateList(
                     image = it,
                     imageType = imageType
                 )
