@@ -1,6 +1,6 @@
 package com.example.diaryapp.data.repository
 
-import com.example.diaryapp.model.Diary
+import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.util.Constants.APP_ID
 import com.example.diaryapp.util.RequestState
 import com.example.diaryapp.util.toInstant

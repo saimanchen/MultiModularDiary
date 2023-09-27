@@ -1,4 +1,4 @@
-package com.example.diaryapp.model
+package com.example.diaryapp.model.remote
 
 import com.example.diaryapp.util.toRealmInstant
 import io.realm.kotlin.ext.realmListOf
