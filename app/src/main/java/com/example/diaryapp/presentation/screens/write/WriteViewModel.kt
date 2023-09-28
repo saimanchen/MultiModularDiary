@@ -139,6 +139,7 @@ class WriteViewModel @Inject constructor(
 
         if (result is RequestState.Success) {
             uploadImagesToFirebase()
+            deleteImagesFromFirebase()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }
@@ -166,10 +167,6 @@ class WriteViewModel @Inject constructor(
                     onError = onError
                 )
             }
-            deleteImagesFromFirebase(
-                images = galleryState.imagesToBeDeleted.map { it.remoteImagePath }
-            )
-            galleryState.clearImagesToBeDeleted()
         }
     }
 
@@ -182,7 +179,9 @@ class WriteViewModel @Inject constructor(
                 val result = MongoDB.deleteDiaryEntry(id = ObjectId(diaryState.selectedDiaryId!!))
                 if (result is RequestState.Success) {
                     withContext(Dispatchers.Main) {
-                        diaryState.selectedDiary?.let { deleteImagesFromFirebase(images = it.images) }
+                        diaryState.selectedDiary?.let {
+                            deleteImagesFromFirebase(images = it.images)
+                        }
                         onSuccess()
                     }
                 } else if (result is RequestState.Error) {
@@ -248,11 +247,17 @@ class WriteViewModel @Inject constructor(
     }
 
     private fun deleteImagesFromFirebase(
-        images: List<String>
+        images: List<String>? = null
     ) {
         val storage = FirebaseStorage.getInstance().reference
-        images.forEach { remotePath ->
-            storage.child(remotePath).delete()
+        if (images != null) {
+            images.forEach { remotePath ->
+                storage.child(remotePath).delete()
+            }
+        } else {
+            galleryState.imagesToBeDeleted.map { it.remoteImagePath }.forEach {
+                storage.child(it).delete()
+            }
         }
     }
 
