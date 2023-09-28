@@ -3,9 +3,12 @@ package com.example.diaryapp.presentation.screens.write
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -52,11 +55,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.GalleryUploader
 import com.example.diaryapp.presentation.components.TopBarWrite
+import com.example.diaryapp.presentation.components.ZoomableImage
 import com.example.diaryapp.util.GalleryState
 import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.launch
@@ -74,30 +79,58 @@ fun WriteScreen(
     onDateTimeUpdated: (ZonedDateTime?) -> Unit,
     onDeleteConfirmClicked: () -> Unit,
     onSaveClicked: (Diary) -> Unit,
-    onImageSelected: (Uri) -> Unit
+    onImageSelected: (Uri) -> Unit,
+    onImageDeleteClicked: (GalleryImage) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopBarWrite(
-                selectedDiary = diaryState.selectedDiary,
-                navigateBack = navigateBack,
-                onDeleteConfirmClicked = onDeleteConfirmClicked,
-                onDateTimeUpdated = onDateTimeUpdated
-            )
-        },
-        content = {
-            WriteContent(
-                diaryState = diaryState,
-                galleryState = galleryState,
-                onTitleChanged = onTitleChanged,
-                onDescriptionChanged = onDescriptionChanged,
-                onMoodIconChanged = onMoodIconChanged,
-                paddingValues = it,
-                onSaveClicked = onSaveClicked,
-                onImageSelected = onImageSelected
-            )
+    var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
+
+    if (selectedGalleryImage == null) {
+        Scaffold(
+            topBar = {
+                TopBarWrite(
+                    selectedDiary = diaryState.selectedDiary,
+                    navigateBack = navigateBack,
+                    onDeleteConfirmClicked = onDeleteConfirmClicked,
+                    onDateTimeUpdated = onDateTimeUpdated
+                )
+            },
+            content = { paddingValues ->
+                WriteContent(
+                    diaryState = diaryState,
+                    galleryState = galleryState,
+                    onTitleChanged = onTitleChanged,
+                    onDescriptionChanged = onDescriptionChanged,
+                    onMoodIconChanged = onMoodIconChanged,
+                    paddingValues = paddingValues,
+                    onSaveClicked = onSaveClicked,
+                    onImageSelected = onImageSelected,
+                    onImageClicked = { selectedGalleryImage = it }
+                )
+            }
+        )
+    } else {
+        AnimatedVisibility(visible = true) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                contentAlignment = Alignment.Center
+            ) {
+                selectedGalleryImage?.let {
+                    ZoomableImage(
+                        selectedGalleryImage = it,
+                        onCloseClicked = { selectedGalleryImage = null },
+                        onDeleteClicked = {
+                            if (selectedGalleryImage != null) {
+                                onImageDeleteClicked(selectedGalleryImage!!)
+                                selectedGalleryImage = null
+                            }
+                        }
+                    )
+                }
+            }
         }
-    )
+    }
 }
 
 @Composable
@@ -110,6 +143,7 @@ fun WriteContent(
     paddingValues: PaddingValues,
     onSaveClicked: (Diary) -> Unit,
     onImageSelected: (Uri) -> Unit,
+    onImageClicked: (GalleryImage) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -245,7 +279,7 @@ fun WriteContent(
                 imageSize = 40.dp,
                 onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
-                onImageClicked = {}
+                onImageClicked = onImageClicked
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
@@ -257,7 +291,8 @@ fun WriteContent(
                                 this.title = diaryState.title
                                 this.description = diaryState.description
                                 this.mood = diaryState.mood.name
-                                this.images = galleryState.images.map { it.remoteImagePath }.toRealmList()
+                                this.images =
+                                    galleryState.images.map { it.remoteImagePath }.toRealmList()
                             }
                         )
                     } else {
@@ -265,7 +300,7 @@ fun WriteContent(
                             context,
                             "Fields can't be empty",
                             Toast.LENGTH_SHORT
-                            ).show()
+                        ).show()
                     }
                 },
                 shape = Shapes().extraSmall,
