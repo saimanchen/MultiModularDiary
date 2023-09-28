@@ -1,25 +1,14 @@
 package com.example.diaryapp.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -32,14 +21,13 @@ import com.example.diaryapp.model.GalleryImage
 @Composable
 fun ZoomableImage(
     selectedGalleryImage: GalleryImage,
-    paddingValues: PaddingValues,
+    onShowImageTopBar: () -> Unit
 ) {
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
     var scale by remember { mutableFloatStateOf(1f) }
     Box(
         modifier = Modifier
-            .padding(top = paddingValues.calculateTopPadding())
             .pointerInput(Unit) {
                 detectTransformGestures { _, pan, zoom, _ ->
                     scale = maxOf(1f, minOf(scale * zoom, 5f))
@@ -60,7 +48,8 @@ fun ZoomableImage(
                     scaleY = maxOf(.5f, minOf(3f, scale)),
                     translationX = offsetX,
                     translationY = offsetY
-                ),
+                )
+                .clickable { onShowImageTopBar() },
             model = ImageRequest.Builder(LocalContext.current)
                 .data(selectedGalleryImage.image.toString())
                 .crossfade(true)
