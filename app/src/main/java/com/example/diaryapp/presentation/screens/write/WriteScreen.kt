@@ -3,6 +3,7 @@ package com.example.diaryapp.presentation.screens.write
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -84,6 +85,10 @@ fun WriteScreen(
 ) {
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
 
+    BackHandler(selectedGalleryImage != null) {
+        selectedGalleryImage = null
+    }
+
     if (selectedGalleryImage == null) {
         Scaffold(
             topBar = {
@@ -113,7 +118,7 @@ fun WriteScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 selectedGalleryImage?.let {
