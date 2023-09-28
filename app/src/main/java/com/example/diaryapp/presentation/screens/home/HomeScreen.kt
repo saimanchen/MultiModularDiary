@@ -42,7 +42,7 @@ fun HomeScreen(
 ) {
     Scaffold(
         topBar = {
-            TopBarHome(onMenuClicked = { onLogOutClicked() })
+            TopBarHome(onLogOutClicked = { onLogOutClicked() })
         },
         floatingActionButton = {
             FloatingActionButton(

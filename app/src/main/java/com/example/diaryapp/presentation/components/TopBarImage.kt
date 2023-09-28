@@ -2,8 +2,8 @@ package com.example.diaryapp.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,24 +16,27 @@ import androidx.compose.ui.Modifier
 
 @ExperimentalMaterial3Api
 @Composable
-fun TopBarHome(onLogOutClicked: () -> Unit) {
+fun TopBarImage(
+    onNavigateBackClicked: () -> Unit,
+    onDeleteClicked: () -> Unit
+) {
     TopAppBar(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         navigationIcon = {
-            IconButton(onClick = onLogOutClicked) {
+            IconButton(onClick = onNavigateBackClicked) {
                 Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Log Out"
+                    imageVector = Icons.Default.KeyboardArrowLeft,
+                    contentDescription = "Navigate Back"
                 )
             }
         }, title = {
             Text(text = "")
         },
         actions = {
-            IconButton(onClick = onLogOutClicked) {
+            IconButton(onClick = onDeleteClicked) {
                 Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Date"
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete"
                 )
             }
         },
