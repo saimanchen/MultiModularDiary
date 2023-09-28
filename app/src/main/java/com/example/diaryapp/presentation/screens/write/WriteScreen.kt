@@ -86,7 +86,9 @@ fun WriteScreen(
     onImageSelected: (Uri) -> Unit,
     onImageDeleteClicked: (GalleryImage) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
+    var showImageTopBar by remember { mutableStateOf(true) }
 
     BackHandler(selectedGalleryImage != null) {
         selectedGalleryImage = null
@@ -121,6 +123,7 @@ fun WriteScreen(
             Scaffold(
                 topBar = {
                     TopBarImage(
+                        showImageTopBar = showImageTopBar,
                         onNavigateBackClicked = { selectedGalleryImage = null },
                         onDeleteClicked = {
                             if (selectedGalleryImage != null) {
@@ -129,18 +132,24 @@ fun WriteScreen(
                             }
                         }
                     )
+
                 },
-                content = { paddingValues ->
+                content = {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.background),
                         contentAlignment = Alignment.Center
                     ) {
-                        selectedGalleryImage?.let {
+                        selectedGalleryImage?.let { galleryImage ->
                             ZoomableImage(
-                                selectedGalleryImage = it,
-                                paddingValues = paddingValues
+                                selectedGalleryImage = galleryImage,
+                                onShowImageTopBar = {
+                                    scope.launch {
+                                        showImageTopBar = !showImageTopBar
+                                    }
+
+                                }
                             )
                         }
                     }

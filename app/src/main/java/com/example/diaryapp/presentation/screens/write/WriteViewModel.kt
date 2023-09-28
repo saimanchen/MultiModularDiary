@@ -166,6 +166,10 @@ class WriteViewModel @Inject constructor(
                     onError = onError
                 )
             }
+            deleteImagesFromFirebase(
+                images = galleryState.imagesToBeDeleted.map { it.remoteImagePath }
+            )
+            galleryState.clearImagesToBeDeleted()
         }
     }
 
@@ -247,7 +251,7 @@ class WriteViewModel @Inject constructor(
         images: List<String>
     ) {
         val storage = FirebaseStorage.getInstance().reference
-        images.forEach {remotePath ->
+        images.forEach { remotePath ->
             storage.child(remotePath).delete()
         }
     }
