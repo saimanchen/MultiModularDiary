@@ -1,14 +1,7 @@
 package com.example.diaryapp.util
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import com.example.diaryapp.model.GalleryImage
-
-@Composable
-fun rememberGalleryState(): GalleryState {
-    return remember { GalleryState() }
-}
 
 class GalleryState {
     val images = mutableStateListOf<GalleryImage>()
