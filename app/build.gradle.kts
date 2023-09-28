@@ -70,6 +70,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation("androidx.compose.runtime:runtime:1.5.2")
+
     // Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.6.0")
 
