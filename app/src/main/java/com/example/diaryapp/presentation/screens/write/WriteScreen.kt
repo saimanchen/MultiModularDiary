@@ -30,6 +30,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -61,6 +62,7 @@ import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
 import com.example.diaryapp.presentation.components.GalleryUploader
+import com.example.diaryapp.presentation.components.TopBarImage
 import com.example.diaryapp.presentation.components.TopBarWrite
 import com.example.diaryapp.presentation.components.ZoomableImage
 import com.example.diaryapp.util.GalleryState
@@ -68,6 +70,7 @@ import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WriteScreen(
@@ -115,16 +118,10 @@ fun WriteScreen(
         )
     } else {
         AnimatedVisibility(visible = true) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
-                contentAlignment = Alignment.Center
-            ) {
-                selectedGalleryImage?.let {
-                    ZoomableImage(
-                        selectedGalleryImage = it,
-                        onCloseClicked = { selectedGalleryImage = null },
+            Scaffold(
+                topBar = {
+                    TopBarImage(
+                        onNavigateBackClicked = { selectedGalleryImage = null },
                         onDeleteClicked = {
                             if (selectedGalleryImage != null) {
                                 onImageDeleteClicked(selectedGalleryImage!!)
@@ -132,8 +129,24 @@ fun WriteScreen(
                             }
                         }
                     )
+                },
+                content = { paddingValues ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        selectedGalleryImage?.let {
+                            ZoomableImage(
+                                selectedGalleryImage = it,
+                                paddingValues = paddingValues
+                            )
+                        }
+                    }
                 }
-            }
+            )
+
         }
     }
 }
@@ -164,9 +177,7 @@ fun WriteContent(
             .fillMaxSize()
             .imePadding()
             .navigationBarsPadding()
-            .padding(
-                top = paddingValues.calculateTopPadding()
-            )
+            .padding(top = paddingValues.calculateTopPadding())
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
