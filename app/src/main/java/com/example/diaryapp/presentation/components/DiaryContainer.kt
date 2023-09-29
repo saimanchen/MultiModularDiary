@@ -1,16 +1,9 @@
 package com.example.diaryapp.presentation.components
 
 import android.net.Uri
-import android.view.animation.OvershootInterpolator
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseInBounce
-import androidx.compose.animation.core.EaseInElastic
-import androidx.compose.animation.core.EaseInOutBounce
-import androidx.compose.animation.core.EaseOutElastic
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -36,7 +29,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -62,7 +54,6 @@ import com.example.diaryapp.util.Elevation
 import com.example.diaryapp.util.fetchImagesFromFirebase
 import com.example.diaryapp.util.toInstant
 import io.realm.kotlin.ext.realmListOf
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
