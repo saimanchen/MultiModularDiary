@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -41,11 +44,11 @@ import kotlin.math.max
 
 @Composable
 fun Gallery(
+    isGalleryLoading: Boolean,
     modifier: Modifier = Modifier,
     images: List<Uri>,
     imageSize: Dp = 40.dp,
     spaceBetween: Dp = 10.dp,
-    imageShape: CornerBasedShape = Shapes().extraSmall
 ) {
     BoxWithConstraints(modifier = modifier) {
         val numberOfVisibleImages = remember {
@@ -65,26 +68,43 @@ fun Gallery(
 
         Row {
             images.take(numberOfVisibleImages.value).forEach { image ->
-                AsyncImage(
-                    modifier = Modifier
-                        .clip(imageShape)
-                        .size(imageSize),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(image)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "Gallery Image",
-                    contentScale = ContentScale.Crop
-                )
-
+                if (isGalleryLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(imageSize)
+                            .border(
+                                BorderStroke(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            ),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                } else {
+                    AsyncImage(
+                        modifier = Modifier
+                            .size(imageSize)
+                            .border(
+                                BorderStroke(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            ),
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(image)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Gallery Image",
+                        contentScale = ContentScale.Crop
+                    )
+                }
                 Spacer(modifier = Modifier.width(spaceBetween))
             }
 
             if (remainingImages.value > 0) {
                 RemainingImagesBox(
                     imageSize = imageSize,
-                    remainingImages = remainingImages.value,
-                    imageShape = imageShape
+                    remainingImages = remainingImages.value
                 )
             }
         }
@@ -161,7 +181,6 @@ fun GalleryUploader(
                 RemainingImagesBox(
                     imageSize = imageSize,
                     remainingImages = remainingImages.value,
-                    imageShape = imageShape
                 )
             }
         }
@@ -197,12 +216,10 @@ fun AddImageButton(
 fun RemainingImagesBox(
     imageSize: Dp,
     remainingImages: Int,
-    imageShape: CornerBasedShape
 ) {
     Box(contentAlignment = Alignment.Center) {
         Surface(
             modifier = Modifier
-                .clip(imageShape)
                 .size(imageSize),
             color = MaterialTheme.colorScheme.secondary
         ) {}
