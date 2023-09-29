@@ -1,16 +1,26 @@
 package com.example.diaryapp.presentation.components
 
 import android.net.Uri
+import android.view.animation.OvershootInterpolator
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseInBounce
+import androidx.compose.animation.core.EaseInElastic
+import androidx.compose.animation.core.EaseInOutBounce
+import androidx.compose.animation.core.EaseOutElastic
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,9 +29,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,21 +46,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.diaryapp.R
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.util.Elevation
 import com.example.diaryapp.util.fetchImagesFromFirebase
 import com.example.diaryapp.util.toInstant
 import io.realm.kotlin.ext.realmListOf
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
@@ -62,12 +76,12 @@ fun DiaryContainer(
     val localDensity = LocalDensity.current
     val context = LocalContext.current
     var componentHeight by remember { mutableStateOf(0.dp) }
-    var isGalleryOpened by remember { mutableStateOf(false) }
+    var showContent by remember { mutableStateOf(false) }
     var isGalleryLoading by remember { mutableStateOf(false) }
     val downloadedImages = remember { mutableStateListOf<Uri>() }
 
-    LaunchedEffect(key1 = isGalleryOpened) {
-        if (isGalleryOpened && downloadedImages.isEmpty()) {
+    LaunchedEffect(key1 = showContent) {
+        if (showContent && downloadedImages.isEmpty()) {
             isGalleryLoading = true
             fetchImagesFromFirebase(
                 remoteImagePaths = diary.images,
@@ -82,11 +96,11 @@ fun DiaryContainer(
                         Toast.LENGTH_SHORT
                     ).show()
                     isGalleryLoading = false
-                    isGalleryOpened = false
+                    showContent = true
                 },
                 onReadyToDisplay = {
                     isGalleryLoading = false
-                    isGalleryOpened = true
+                    showContent = true
                 }
             )
         }
@@ -110,40 +124,71 @@ fun DiaryContainer(
         Spacer(modifier = Modifier.width(14.dp))
         Surface(
             modifier = Modifier
-                .clip(shape = Shapes().extraSmall)
+                .border(BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.secondary))
                 .onGloballyPositioned {
                     componentHeight = with(localDensity) { it.size.height.toDp() }
                 },
             tonalElevation = Elevation.Level1
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                DiaryHeader(moodName = diary.mood, time = diary.date.toInstant())
-                Text(
-                    modifier = Modifier.padding(14.dp),
-                    text = diary.description,
-                    style = TextStyle(fontSize = MaterialTheme.typography.bodyLarge.fontSize),
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                DiaryHeader(
+                    showContent = showContent,
+                    onShowContentClicked = { showContent = !showContent },
+                    isGallery = diary.images.isNotEmpty(),
+                    moodName = diary.mood,
+                    time = diary.date.toInstant()
                 )
+                Column(modifier = Modifier.padding(vertical = 7.dp)) {
 
-                if (diary.images.isNotEmpty()) {
-                    GalleryButton(
-                        isGalleryLoading = isGalleryLoading,
-                        isGalleryOpened = isGalleryOpened,
-                        onClick = { isGalleryOpened = !isGalleryOpened },
+                    Text(
+                        modifier = Modifier.padding(vertical = 7.dp, horizontal = 14.dp),
+                        text = diary.title,
+                        style = TextStyle(
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            fontWeight = FontWeight.Light
+                        ),
                     )
-                }
-                AnimatedVisibility(
-                    visible = isGalleryOpened && !isGalleryLoading,
-                    enter = fadeIn() + expandVertically(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
+                    AnimatedVisibility(
+                        visible = showContent,
+                        enter = fadeIn() + expandVertically(
+                            animationSpec = tween(
+                                durationMillis = 300,
+                                delayMillis = 300,
+                                easing = LinearEasing
+                            )
                         )
-                    )
-                ) {
-                    Column(modifier = Modifier.padding(14.dp)) {
-                        Gallery(images = downloadedImages)
+                    ) {
+                        Column {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.3f)
+                                    .padding(start = 14.dp)
+                                    .height(1.dp)
+                                    .background(MaterialTheme.colorScheme.secondary)
+                            )
+                            Spacer(modifier = Modifier.height(7.dp))
+                            Text(
+                                modifier = Modifier.padding(vertical = 7.dp, horizontal = 14.dp),
+                                text = diary.description,
+                                style = TextStyle(
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                    fontWeight = FontWeight.Light
+                                ),
+                                maxLines = 4,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Box(modifier = Modifier.padding(14.dp)) {
+                                Gallery(
+                                    isGalleryLoading = isGalleryLoading,
+                                    images = downloadedImages
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -153,49 +198,70 @@ fun DiaryContainer(
 
 @Composable
 fun DiaryHeader(
+    showContent: Boolean,
+    onShowContentClicked: () -> Unit,
+    isGallery: Boolean,
     moodName: String,
     time: Instant
 ) {
     val mood by remember { mutableStateOf(Mood.valueOf(moodName)) }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(mood.containerColor)
-            .padding(horizontal = 14.dp, vertical = 7.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                modifier = Modifier.size(18.dp),
-                painter = painterResource(id = mood.icon),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 14.dp, vertical = 7.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = mood.icon),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                if (isGallery) {
+                    Icon(
+                        modifier = Modifier
+                            .size(32.dp),
+                        painter = painterResource(id = R.drawable.baseline_photo_24),
+                        contentDescription = "Show More",
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = SimpleDateFormat("hh:mm a", Locale.GERMAN).format(Date.from(time)),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = TextStyle(
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = FontWeight.Light
+                    )
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { onShowContentClicked() },
+                    imageVector = if (showContent) {
+                        Icons.Default.KeyboardArrowUp
+                    } else {
+                        Icons.Default.KeyboardArrowDown
+                    },
+                    contentDescription = if (showContent) "Hide Content" else "Show Content"
+                )
+            }
         }
-        Text(
-            text = SimpleDateFormat("hh:mm a", Locale.GERMAN).format(Date.from(time)),
-            color = mood.contentColor,
-            style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
-        )
-    }
-}
 
-@Composable
-fun GalleryButton(
-    isGalleryLoading: Boolean,
-    isGalleryOpened: Boolean,
-    onClick: () -> Unit
-) {
-    TextButton(onClick = onClick) {
-        Text(
-            text = if (isGalleryOpened) {
-                if (isGalleryLoading) "Loading" else "Hide Gallery"
-            } else {
-                "Show Gallery"
-            },
-            style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(MaterialTheme.colorScheme.secondary)
         )
     }
 }
