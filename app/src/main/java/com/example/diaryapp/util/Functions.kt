@@ -2,8 +2,8 @@ package com.example.diaryapp.util
 
 import android.net.Uri
 import androidx.core.net.toUri
+import com.example.diaryapp.model.local.entity.ImageToDelete
 import com.example.diaryapp.model.local.entity.ImageToUpload
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storageMetadata
 import io.realm.kotlin.types.RealmInstant
@@ -41,7 +41,16 @@ fun retryUploadingImageToFirebase(
         imageToUpload.imageUri.toUri(),
         storageMetadata {  },
         imageToUpload.sessionUri.toUri()
-    ).addOnSuccessListener { onSuccess }
+    ).addOnSuccessListener { onSuccess() }
+}
+
+fun retryDeletingImageToFirebase(
+    imageToDelete: ImageToDelete,
+    onSuccess: () -> Unit
+) {
+    val storage = FirebaseStorage.getInstance().reference
+    storage.child(imageToDelete.remoteImagePath).delete()
+        .addOnSuccessListener { onSuccess() }
 }
 
 fun RealmInstant.toInstant(): Instant {

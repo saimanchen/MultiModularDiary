@@ -14,17 +14,21 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-     @Singleton
-     @Provides
-     fun provideDatabase(@ApplicationContext context: Context): ImagesDatabase {
-         return Room.databaseBuilder(
-             context = context,
-             klass = ImagesDatabase::class.java,
-             name = IMAGES_DATABASE
-         ).build()
-     }
+    @Singleton
+    @Provides
+    fun provideDatabase(@ApplicationContext context: Context): ImagesDatabase {
+        return Room.databaseBuilder(
+            context = context,
+            klass = ImagesDatabase::class.java,
+            name = IMAGES_DATABASE
+        ).build()
+    }
 
     @Singleton
     @Provides
     fun provideFirstDao(database: ImagesDatabase) = database.imageToUploadDao()
+
+    @Singleton
+    @Provides
+    fun provideSecondDao(database: ImagesDatabase) = database.imageToDeleteDao()
 }
