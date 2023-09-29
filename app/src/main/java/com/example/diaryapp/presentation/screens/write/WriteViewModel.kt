@@ -10,7 +10,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.diaryapp.data.repository.MongoDB
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.GalleryImage
+import com.example.diaryapp.model.local.ImagesToDeleteDao
 import com.example.diaryapp.model.local.ImagesToUploadDao
+import com.example.diaryapp.model.local.entity.ImageToDelete
 import com.example.diaryapp.model.local.entity.ImageToUpload
 import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.util.Constants.WRITE_SCREEN_ARG_KEY
@@ -35,7 +37,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WriteViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val imagesToUploadDao: ImagesToUploadDao
+    private val imagesToUploadDao: ImagesToUploadDao,
+    private val imagesToDeleteDao: ImagesToDeleteDao
 ) : ViewModel() {
     var diaryState by mutableStateOf(DiaryState())
         private set
@@ -253,10 +256,24 @@ class WriteViewModel @Inject constructor(
         if (images != null) {
             images.forEach { remotePath ->
                 storage.child(remotePath).delete()
+                    .addOnFailureListener {
+                        viewModelScope.launch {
+                            imagesToDeleteDao.addImageToDelete(
+                                ImageToDelete(remoteImagePath = remotePath)
+                            )
+                        }
+                    }
             }
         } else {
-            galleryState.imagesToBeDeleted.map { it.remoteImagePath }.forEach {
-                storage.child(it).delete()
+            galleryState.imagesToBeDeleted.map { it.remoteImagePath }.forEach { remotePath ->
+                storage.child(remotePath).delete()
+                    .addOnFailureListener {
+                        viewModelScope.launch {
+                            imagesToDeleteDao.addImageToDelete(
+                                ImageToDelete(remoteImagePath = remotePath)
+                            )
+                        }
+                    }
             }
         }
     }
