@@ -28,7 +28,9 @@ fun DateHeader(localDate: LocalDate) {
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(horizontalAlignment = Alignment.End) {
+        Column(
+            horizontalAlignment = Alignment.Start
+        ) {
             Text(
                 text = String.format("%02d", localDate.dayOfMonth),
                 style = TextStyle(
@@ -36,7 +38,6 @@ fun DateHeader(localDate: LocalDate) {
                     fontWeight = FontWeight.Light
                 )
             )
-
             Text(
                 text = localDate.dayOfWeek.toString().take(3),
                 style = TextStyle(

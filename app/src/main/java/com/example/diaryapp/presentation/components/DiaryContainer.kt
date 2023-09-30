@@ -105,7 +105,6 @@ fun DiaryContainer(
             }
         ) { onClick(diary._id.toHexString()) }
     ) {
-        Spacer(modifier = Modifier.width(14.dp))
         Surface(
             modifier = Modifier
                 .width(2.dp)
