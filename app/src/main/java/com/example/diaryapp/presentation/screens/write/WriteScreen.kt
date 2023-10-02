@@ -35,7 +35,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -50,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -184,6 +184,7 @@ fun WriteContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
             .imePadding()
             .navigationBarsPadding()
             .padding(top = paddingValues.calculateTopPadding())
@@ -203,6 +204,7 @@ fun WriteContent(
                 Text(
                     text = "Mood:",
                     style = TextStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Light
                     )
@@ -225,6 +227,7 @@ fun WriteContent(
                         value = diaryState.title,
                         onValueChange = onTitleChanged,
                         textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
                             fontWeight = FontWeight.Light
                         ),
@@ -265,6 +268,7 @@ fun WriteContent(
                         value = diaryState.description,
                         onValueChange = onDescriptionChanged,
                         textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             fontWeight = FontWeight.Light
                         ),
@@ -328,14 +332,15 @@ fun WriteContent(
                         ).show()
                     }
                 },
-                shape = Shapes().extraSmall,
+                shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.tertiary
                 ),
-                border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary)
             ) {
                 Text(
+                    color = MaterialTheme.colorScheme.onSurface,
                     text = "Save",
                     style = TextStyle(
                         fontSize = MaterialTheme.typography.titleMedium.fontSize,

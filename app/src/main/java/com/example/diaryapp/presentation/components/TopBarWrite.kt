@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.window.DialogProperties
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.util.toInstant
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -93,6 +94,7 @@ fun TopBarWrite(
                     "$formattedDate, $formattedTime"
                 },
                 style = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.Center
@@ -113,7 +115,8 @@ fun TopBarWrite(
                     )
                 }
             } else {
-                IconButton(onClick = { dateDialog.show() }) {
+                IconButton(onClick = { dateDialog.show() }
+                ) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "Choose date and time"
@@ -126,12 +129,11 @@ fun TopBarWrite(
             }
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            navigationIconContentColor = MaterialTheme.colorScheme.secondary,
-            actionIconContentColor = MaterialTheme.colorScheme.secondary
+            containerColor = MaterialTheme.colorScheme.surface,
+            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+            actionIconContentColor = MaterialTheme.colorScheme.onSurface
         ),
     )
-
     CalendarDialog(
         state = dateDialog,
         selection = CalendarSelection.Date { localDate ->
@@ -141,7 +143,8 @@ fun TopBarWrite(
         config = CalendarConfig(
             monthSelection = true,
             yearSelection = true
-        )
+        ),
+        properties = DialogProperties()
     )
     ClockDialog(
         state = timeDialog,
