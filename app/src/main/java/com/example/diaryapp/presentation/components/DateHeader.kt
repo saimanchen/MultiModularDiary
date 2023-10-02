@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +23,7 @@ fun DateHeader(localDate: LocalDate) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -34,6 +33,7 @@ fun DateHeader(localDate: LocalDate) {
             Text(
                 text = String.format("%02d", localDate.dayOfMonth),
                 style = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     fontWeight = FontWeight.Light
                 )
@@ -41,6 +41,7 @@ fun DateHeader(localDate: LocalDate) {
             Text(
                 text = localDate.dayOfWeek.toString().take(3),
                 style = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     fontWeight = FontWeight.Light
                 )
@@ -51,6 +52,7 @@ fun DateHeader(localDate: LocalDate) {
 
         Column(horizontalAlignment = Alignment.Start) {
             Text(
+                color = MaterialTheme.colorScheme.onSurface,
                 text = localDate.month.toString().lowercase().replaceFirstChar { it.titlecase() },
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
@@ -59,7 +61,7 @@ fun DateHeader(localDate: LocalDate) {
             )
 
             Text(
-                modifier = Modifier.alpha(0.4f),
+                color = MaterialTheme.colorScheme.onSurface,
                 text = localDate.year.toString(),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,

@@ -1,6 +1,7 @@
 package com.example.diaryapp.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,12 +10,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -29,24 +30,26 @@ fun CustomAlertDialog(
     if (isDialogOpened) {
         AlertDialog(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .border(BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary))
+                .background(MaterialTheme.colorScheme.surface),
             title = {
                 Text(
                     text = title,
                     fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                    fontWeight = FontWeight.Bold
-
+                    fontWeight = FontWeight.Light,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             },
             text = {
                 Text(
                     text = message,
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Light,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             },
-            shape = Shapes().extraSmall,
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = Color.Transparent,
             confirmButton = {
                 Button(
                     onClick = {
@@ -54,12 +57,17 @@ fun CustomAlertDialog(
                         onCloseDialog()
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.tertiary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     shape = RoundedCornerShape(1.dp),
                 ) {
-                    Text(text = "Confirm")
+                    Text(
+                        text = "Confirm",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Light
+                        )
+                    )
                 }
             },
             dismissButton = {
@@ -68,11 +76,21 @@ fun CustomAlertDialog(
                     shape = RoundedCornerShape(1.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.secondary
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     ),
-                    border = BorderStroke(width = 1.dp, brush = SolidColor(Color.LightGray) )
+                    border = BorderStroke(
+                        width = 1.dp,
+                        brush = SolidColor(
+                            MaterialTheme.colorScheme.primary
+                        )
+                    )
                 ) {
-                    Text(text = "Cancel")
+                    Text(
+                        text = "Cancel",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Light
+                        )
+                    )
                 }
             },
             onDismissRequest = onCloseDialog

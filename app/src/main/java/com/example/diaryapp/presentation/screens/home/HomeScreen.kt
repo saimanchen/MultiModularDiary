@@ -2,6 +2,7 @@ package com.example.diaryapp.presentation.screens.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,8 +49,8 @@ fun HomeScreen(
             FloatingActionButton(
                 onClick = navigateToWrite,
                 shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.tertiary
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -98,6 +99,7 @@ fun HomeContent(
     if (diaryEntries.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 24.dp)
                 .padding(top = paddingValues.calculateTopPadding())
                 .navigationBarsPadding()

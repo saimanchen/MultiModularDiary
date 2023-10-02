@@ -75,7 +75,7 @@ fun Gallery(
                             .border(
                                 BorderStroke(
                                     width = 1.dp,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             ),
                         color = MaterialTheme.colorScheme.primary
@@ -87,7 +87,7 @@ fun Gallery(
                             .border(
                                 BorderStroke(
                                     width = 1.dp,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             ),
                         model = ImageRequest.Builder(LocalContext.current)
@@ -221,7 +221,7 @@ fun RemainingImagesBox(
         Surface(
             modifier = Modifier
                 .size(imageSize),
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.primary
         ) {}
 
         Text(
@@ -230,7 +230,7 @@ fun RemainingImagesBox(
                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                 fontWeight = FontWeight.Normal
             ),
-            color = MaterialTheme.colorScheme.tertiary
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

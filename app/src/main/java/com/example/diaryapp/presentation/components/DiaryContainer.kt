@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -98,23 +99,25 @@ fun DiaryContainer(
     }
 
     Row(
-        modifier = Modifier.clickable(
-            indication = null,
-            interactionSource = remember {
-                MutableInteractionSource()
-            }
-        ) { onClick(diary._id.toHexString()) }
+        modifier = Modifier
+            .clickable(
+                indication = null,
+                interactionSource = remember {
+                    MutableInteractionSource()
+                }
+            ) { onClick(diary._id.toHexString()) }
     ) {
         Surface(
             modifier = Modifier
-                .width(2.dp)
-                .height(componentHeight + 14.dp),
-            tonalElevation = Elevation.Level1
+                .width(1.dp)
+                .height(componentHeight + 14.dp)
+                .alpha(0.7f),
+            color = MaterialTheme.colorScheme.primary
         ) {}
         Spacer(modifier = Modifier.width(14.dp))
         Surface(
             modifier = Modifier
-                .border(BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.secondary))
+                .border(BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary))
                 .onGloballyPositioned {
                     componentHeight = with(localDensity) { it.size.height.toDp() }
                 },
@@ -158,7 +161,7 @@ fun DiaryContainer(
                                     .fillMaxWidth(0.3f)
                                     .padding(start = 14.dp)
                                     .height(1.dp)
-                                    .background(MaterialTheme.colorScheme.secondary)
+                                    .background(MaterialTheme.colorScheme.primary)
                             )
                             Spacer(modifier = Modifier.height(7.dp))
                             Text(
@@ -210,7 +213,7 @@ fun DiaryHeader(
                     modifier = Modifier.size(24.dp),
                     painter = painterResource(id = mood.icon),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 if (isGallery) {
@@ -219,7 +222,7 @@ fun DiaryHeader(
                             .size(32.dp),
                         painter = painterResource(id = R.drawable.baseline_photo_24),
                         contentDescription = "Show More",
-                        tint = MaterialTheme.colorScheme.secondary
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -251,7 +254,7 @@ fun DiaryHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(MaterialTheme.colorScheme.secondary)
+                .background(MaterialTheme.colorScheme.primary)
         )
     }
 }
