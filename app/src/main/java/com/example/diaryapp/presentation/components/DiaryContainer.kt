@@ -39,6 +39,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -109,9 +111,10 @@ fun DiaryContainer(
     ) {
         Surface(
             modifier = Modifier
-                .width(2.dp)
-                .height(componentHeight + 14.dp),
-            tonalElevation = Elevation.Level1
+                .width(1.dp)
+                .height(componentHeight + 14.dp)
+                .alpha(0.7f),
+            color = MaterialTheme.colorScheme.primary
         ) {}
         Spacer(modifier = Modifier.width(14.dp))
         Surface(

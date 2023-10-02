@@ -9,7 +9,7 @@ val White = Color(0xFFFFFFFF)
 val DarkBackground = Color(0xFF191919)
 
 val md_theme_light_primary = Color(0xFF272343) //
-val md_theme_light_onPrimary = Color(0xFFFFFFFF) //
+val md_theme_light_onPrimary = Color(0xFFF5FFFA) //
 val md_theme_light_primaryContainer = Color(0xFFD2E4FF)
 val md_theme_light_onPrimaryContainer = Color(0xFF001C37)
 val md_theme_light_secondary = Color(0xFF191919) //
