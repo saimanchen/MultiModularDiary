@@ -116,7 +116,6 @@ fun GalleryUploader(
     modifier: Modifier = Modifier,
     galleryState: GalleryState,
     imageSize: Dp,
-    imageShape: CornerBasedShape = Shapes().extraSmall,
     spaceBetween: Dp = 12.dp,
     onAddClicked: () -> Unit,
     onImageSelected: (Uri) -> Unit,
@@ -149,7 +148,6 @@ fun GalleryUploader(
         Row {
             AddImageButton(
                 imageSize = imageSize,
-                imageShape = imageShape,
                 onClick = {
                     onAddClicked()
                     multiplePhotoPicker.launch(
@@ -163,7 +161,6 @@ fun GalleryUploader(
             galleryState.images.take(numberOfVisibleImages.value).forEach { galleryImage ->
                 AsyncImage(
                     modifier = Modifier
-                        .clip(imageShape)
                         .size(imageSize)
                         .clickable { onImageClicked(galleryImage) },
                     model = ImageRequest.Builder(LocalContext.current)
@@ -190,13 +187,11 @@ fun GalleryUploader(
 @Composable
 fun AddImageButton(
     imageSize: Dp,
-    imageShape: CornerBasedShape,
     onClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
-            .size(imageSize)
-            .clip(imageShape),
+            .size(imageSize),
         onClick = onClick,
         tonalElevation = Elevation.Level1
     ) {
