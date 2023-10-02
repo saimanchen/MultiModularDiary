@@ -33,6 +33,7 @@ fun DateHeader(localDate: LocalDate) {
             Text(
                 text = String.format("%02d", localDate.dayOfMonth),
                 style = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     fontWeight = FontWeight.Light
                 )
@@ -40,6 +41,7 @@ fun DateHeader(localDate: LocalDate) {
             Text(
                 text = localDate.dayOfWeek.toString().take(3),
                 style = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     fontWeight = FontWeight.Light
                 )
@@ -50,6 +52,7 @@ fun DateHeader(localDate: LocalDate) {
 
         Column(horizontalAlignment = Alignment.Start) {
             Text(
+                color = MaterialTheme.colorScheme.onSurface,
                 text = localDate.month.toString().lowercase().replaceFirstChar { it.titlecase() },
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
@@ -58,6 +61,7 @@ fun DateHeader(localDate: LocalDate) {
             )
 
             Text(
+                color = MaterialTheme.colorScheme.onSurface,
                 text = localDate.year.toString(),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,

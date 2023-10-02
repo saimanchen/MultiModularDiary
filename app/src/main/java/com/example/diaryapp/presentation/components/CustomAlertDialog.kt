@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.diaryapp.util.Elevation
 
 @Composable
 fun CustomAlertDialog(
@@ -39,8 +37,8 @@ fun CustomAlertDialog(
                 Text(
                     text = title,
                     fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                    fontWeight = FontWeight.Light
-
+                    fontWeight = FontWeight.Light,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             },
             text = {
@@ -48,11 +46,10 @@ fun CustomAlertDialog(
                     text = message,
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     fontWeight = FontWeight.Light,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             },
             containerColor = Color.Transparent,
-            tonalElevation = Elevation.Level5,
             confirmButton = {
                 Button(
                     onClick = {
