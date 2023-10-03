@@ -136,11 +136,11 @@ fun DiaryContainer(
                     time = diary.date.toInstant()
                 )
                 Column(modifier = Modifier.padding(vertical = 7.dp)) {
-
                     Text(
                         modifier = Modifier.padding(vertical = 7.dp, horizontal = 14.dp),
                         text = diary.title,
                         style = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
                             fontWeight = FontWeight.Light
                         ),
@@ -168,6 +168,7 @@ fun DiaryContainer(
                                 modifier = Modifier.padding(vertical = 7.dp, horizontal = 14.dp),
                                 text = diary.description,
                                 style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                     fontWeight = FontWeight.Light
                                 ),
