@@ -177,7 +177,7 @@ fun WriteContent(
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(key1 = scrollState.maxValue) {
+    LaunchedEffect(key1 = scrollState) {
         scrollState.scrollTo(scrollState.maxValue)
     }
 
@@ -205,7 +205,7 @@ fun WriteContent(
                     text = "Mood:",
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
                         fontWeight = FontWeight.Light
                     )
                 )
@@ -366,7 +366,8 @@ fun ChangeMoodIconAction(
                 isMoodDialogOpened = true
             },
         painter = painterResource(id = diaryState.mood.icon),
-        contentDescription = "Choose Mood"
+        contentDescription = "Choose Mood",
+        tint = MaterialTheme.colorScheme.onSurface
     )
 
     ChooseMoodIconDialog(

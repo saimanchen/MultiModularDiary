@@ -128,7 +128,7 @@ fun DiaryContainer(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
             ) {
-                DiaryHeader(
+                DiaryEntryHeader(
                     showContent = showContent,
                     onShowContentClicked = { showContent = !showContent },
                     isGallery = diary.images.isNotEmpty(),
@@ -136,11 +136,11 @@ fun DiaryContainer(
                     time = diary.date.toInstant()
                 )
                 Column(modifier = Modifier.padding(vertical = 7.dp)) {
-
                     Text(
                         modifier = Modifier.padding(vertical = 7.dp, horizontal = 14.dp),
                         text = diary.title,
                         style = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
                             fontWeight = FontWeight.Light
                         ),
@@ -168,6 +168,7 @@ fun DiaryContainer(
                                 modifier = Modifier.padding(vertical = 7.dp, horizontal = 14.dp),
                                 text = diary.description,
                                 style = TextStyle(
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                     fontWeight = FontWeight.Light
                                 ),
@@ -190,7 +191,7 @@ fun DiaryContainer(
 }
 
 @Composable
-fun DiaryHeader(
+fun DiaryEntryHeader(
     showContent: Boolean,
     onShowContentClicked: () -> Unit,
     isGallery: Boolean,
@@ -213,7 +214,7 @@ fun DiaryHeader(
                     modifier = Modifier.size(24.dp),
                     painter = painterResource(id = mood.icon),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 if (isGallery) {
@@ -222,7 +223,7 @@ fun DiaryHeader(
                             .size(32.dp),
                         painter = painterResource(id = R.drawable.baseline_photo_24),
                         contentDescription = "Show More",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
