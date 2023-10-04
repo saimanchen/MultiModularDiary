@@ -5,7 +5,6 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,13 +41,11 @@ fun GoogleButton(
     secondaryText: String = "Signing in..",
     icon: Int = R.drawable.ic_google_logo,
     borderColor: Color = MaterialTheme.colorScheme.primary,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
     borderStrokeWidth: Dp = 1.dp,
-    progressIndicatorColor: Color = Color.Black,
+    progressIndicatorColor: Color = MaterialTheme.colorScheme.primary,
     onclick: () -> Unit
 ) {
-    val isDarkTheme = isSystemInDarkTheme()
-
     var buttonText by remember { mutableStateOf(primaryText) }
     LaunchedEffect(key1 = loadingState) {
         buttonText = if (loadingState) secondaryText else primaryText
@@ -87,7 +84,7 @@ fun GoogleButton(
                 style = TextStyle(
                     fontSize = MaterialTheme
                         .typography.bodyMedium.fontSize,
-                    color = if (isDarkTheme) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             )
 

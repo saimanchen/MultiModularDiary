@@ -54,7 +54,7 @@ fun AuthenticationScreen(
 ) {
     Scaffold(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
             .navigationBarsPadding()
             .statusBarsPadding(),
         content = {
@@ -103,7 +103,7 @@ fun AuthenticationContent(
     Surface(
         modifier = Modifier
             .fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.surface
     ) {
         Column {
             Column(
@@ -132,14 +132,14 @@ fun AuthenticationContent(
                         style = TextStyle(
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
                             fontWeight = FontWeight.Bold,
-                            color = if (isDarkTheme) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     )
                     Text(
                         text = stringResource(id = R.string.auth_subtitle),
                         style = TextStyle(
                             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                            color = MaterialTheme.colorScheme.tertiary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Light
                         )
                     )
