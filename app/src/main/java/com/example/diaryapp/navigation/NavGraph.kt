@@ -137,6 +137,8 @@ fun NavGraphBuilder.homeRoute(
         val diaryEntries by viewModel.diaryEntries
         val scope = rememberCoroutineScope()
         var isSignOutDialogOpened by remember { mutableStateOf(false) }
+        var isDeleteAllDiaryEntriesDialogOpened by remember { mutableStateOf(false) }
+
 
         LaunchedEffect(key1 = diaryEntries) {
             if (diaryEntries != RequestState.Loading) {
@@ -149,6 +151,9 @@ fun NavGraphBuilder.homeRoute(
             onLogOutClicked = {
                 isSignOutDialogOpened = true
             },
+            onDeleteAllDiaryEntriesClicked = {
+                isDeleteAllDiaryEntriesDialogOpened = true
+            },
             navigateToWrite = navigateToWrite,
             navigateToWriteWithArgs = navigateToWriteWithArgs
         )
@@ -158,6 +163,21 @@ fun NavGraphBuilder.homeRoute(
             message = "Do you want to sign out?",
             isDialogOpened = isSignOutDialogOpened,
             onCloseDialog = { isSignOutDialogOpened = false },
+            onConfirmClicked = {
+                scope.launch(Dispatchers.IO) {
+                    App.create(APP_ID).currentUser?.logOut()
+
+                    withContext(Dispatchers.Main) {
+                        navigateToAuthentication()
+                    }
+                }
+            }
+        )
+        CustomAlertDialog(
+            title = "WARNING!",
+            message = "Do you want to permanently delete all diary entries?",
+            isDialogOpened = isDeleteAllDiaryEntriesDialogOpened,
+            onCloseDialog = { isDeleteAllDiaryEntriesDialogOpened = false },
             onConfirmClicked = {
                 scope.launch(Dispatchers.IO) {
                     App.create(APP_ID).currentUser?.logOut()
@@ -222,7 +242,7 @@ fun NavGraphBuilder.writeRoute(
                 viewModel.upsertDiary(
                     diary = it,
                     onSuccess = navigateBack,
-                    onError = {message ->
+                    onError = { message ->
                         Toast.makeText(
                             context,
                             message,

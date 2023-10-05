@@ -38,12 +38,16 @@ import java.time.LocalDate
 fun HomeScreen(
     diaryEntries: DiaryEntries,
     onLogOutClicked: () -> Unit,
+    onDeleteAllDiaryEntriesClicked: () -> Unit,
     navigateToWrite: () -> Unit,
     navigateToWriteWithArgs: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
-            TopBarHome(onLogOutClicked = { onLogOutClicked() })
+            TopBarHome(
+                onLogOutClicked = onLogOutClicked,
+                onDeleteAllDiaryEntriesClicked = onDeleteAllDiaryEntriesClicked
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
