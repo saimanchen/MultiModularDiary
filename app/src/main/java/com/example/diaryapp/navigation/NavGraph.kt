@@ -133,9 +133,10 @@ fun NavGraphBuilder.homeRoute(
     onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
-        val viewModel: HomeViewModel = viewModel()
+        val viewModel: HomeViewModel = hiltViewModel()
         val diaryEntries by viewModel.diaryEntries
         val scope = rememberCoroutineScope()
+        val context = LocalContext.current
         var isSignOutDialogOpened by remember { mutableStateOf(false) }
         var isDeleteAllDiaryEntriesDialogOpened by remember { mutableStateOf(false) }
 
@@ -179,13 +180,23 @@ fun NavGraphBuilder.homeRoute(
             isDialogOpened = isDeleteAllDiaryEntriesDialogOpened,
             onCloseDialog = { isDeleteAllDiaryEntriesDialogOpened = false },
             onConfirmClicked = {
-                scope.launch(Dispatchers.IO) {
-                    App.create(APP_ID).currentUser?.logOut()
-
-                    withContext(Dispatchers.Main) {
-                        navigateToAuthentication()
+                viewModel.deleteAllDiaryEntries(
+                    onSuccess = {
+                        Toast.makeText(
+                            context,
+                            "All diary entries was successfully deleted",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onError = {
+                        Toast.makeText(
+                            context,
+                            if (it.message == "No internet connection was found.") "No internet connection was found."
+                            else it.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                }
+                )
             }
         )
     }
