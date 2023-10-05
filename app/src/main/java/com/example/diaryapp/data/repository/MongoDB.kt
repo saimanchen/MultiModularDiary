@@ -130,6 +130,22 @@ object MongoDB : MongoDBRepository {
             RequestState.Error(UserNotAuthenticatedException())
         }
     }
+
+    override suspend fun deleteAllDiaryEntries(): RequestState<Boolean> {
+        return if (user != null) {
+            realm.write {
+                val entries = this.query<Diary>("ownerId == $0", user.id).find()
+                try {
+                    delete(entries)
+                    RequestState.Success(data = true)
+                } catch (e: Exception) {
+                    RequestState.Error(e)
+                }
+            }
+        } else {
+            RequestState.Error(UserNotAuthenticatedException())
+        }
+    }
 }
 
 private class UserNotAuthenticatedException : Exception("User is not logged in.")

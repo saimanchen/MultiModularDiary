@@ -133,10 +133,13 @@ fun NavGraphBuilder.homeRoute(
     onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
-        val viewModel: HomeViewModel = viewModel()
+        val viewModel: HomeViewModel = hiltViewModel()
         val diaryEntries by viewModel.diaryEntries
         val scope = rememberCoroutineScope()
+        val context = LocalContext.current
         var isSignOutDialogOpened by remember { mutableStateOf(false) }
+        var isDeleteAllDiaryEntriesDialogOpened by remember { mutableStateOf(false) }
+
 
         LaunchedEffect(key1 = diaryEntries) {
             if (diaryEntries != RequestState.Loading) {
@@ -148,6 +151,9 @@ fun NavGraphBuilder.homeRoute(
             diaryEntries = diaryEntries,
             onLogOutClicked = {
                 isSignOutDialogOpened = true
+            },
+            onDeleteAllDiaryEntriesClicked = {
+                isDeleteAllDiaryEntriesDialogOpened = true
             },
             navigateToWrite = navigateToWrite,
             navigateToWriteWithArgs = navigateToWriteWithArgs
@@ -166,6 +172,31 @@ fun NavGraphBuilder.homeRoute(
                         navigateToAuthentication()
                     }
                 }
+            }
+        )
+        CustomAlertDialog(
+            title = "WARNING!",
+            message = "Do you want to permanently delete all diary entries?",
+            isDialogOpened = isDeleteAllDiaryEntriesDialogOpened,
+            onCloseDialog = { isDeleteAllDiaryEntriesDialogOpened = false },
+            onConfirmClicked = {
+                viewModel.deleteAllDiaryEntries(
+                    onSuccess = {
+                        Toast.makeText(
+                            context,
+                            "All diary entries was successfully deleted",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onError = {
+                        Toast.makeText(
+                            context,
+                            if (it.message == "No internet connection was found.") "No internet connection was found."
+                            else it.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
             }
         )
     }
@@ -222,7 +253,7 @@ fun NavGraphBuilder.writeRoute(
                 viewModel.upsertDiary(
                     diary = it,
                     onSuccess = navigateBack,
-                    onError = {message ->
+                    onError = { message ->
                         Toast.makeText(
                             context,
                             message,

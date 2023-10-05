@@ -3,6 +3,7 @@ package com.example.diaryapp.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,7 +17,10 @@ import androidx.compose.ui.Modifier
 
 @ExperimentalMaterial3Api
 @Composable
-fun TopBarHome(onLogOutClicked: () -> Unit) {
+fun TopBarHome(
+    onLogOutClicked: () -> Unit,
+    onDeleteAllDiaryEntriesClicked: () -> Unit
+) {
     TopAppBar(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         navigationIcon = {
@@ -34,6 +38,12 @@ fun TopBarHome(onLogOutClicked: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Date"
+                )
+            }
+            IconButton(onClick = onDeleteAllDiaryEntriesClicked) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete All Diary Entries"
                 )
             }
         },
