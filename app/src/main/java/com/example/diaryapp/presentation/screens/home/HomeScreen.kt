@@ -103,6 +103,7 @@ fun HomeContent(
     if (diaryEntries.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier
+                .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 24.dp)
                 .padding(top = paddingValues.calculateTopPadding())
