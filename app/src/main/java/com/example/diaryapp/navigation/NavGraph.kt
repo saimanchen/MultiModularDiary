@@ -149,6 +149,11 @@ fun NavGraphBuilder.homeRoute(
 
         HomeScreen(
             diaryEntries = diaryEntries,
+            isDateSelected = viewModel.isDateSelected,
+            onDateSelected = {
+                viewModel.getDiaryEntries(zonedDateTime = it)
+            },
+            onDateResetSelected = { viewModel.getDiaryEntries() },
             onLogOutClicked = {
                 isSignOutDialogOpened = true
             },

@@ -31,12 +31,16 @@ import com.example.diaryapp.presentation.components.EmptyHomeScreen
 import com.example.diaryapp.presentation.components.TopBarHome
 import com.example.diaryapp.util.RequestState
 import java.time.LocalDate
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     diaryEntries: DiaryEntries,
+    isDateSelected: Boolean,
+    onDateSelected: (ZonedDateTime) -> Unit,
+    onDateResetSelected: () -> Unit,
     onLogOutClicked: () -> Unit,
     onDeleteAllDiaryEntriesClicked: () -> Unit,
     navigateToWrite: () -> Unit,
@@ -45,6 +49,9 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopBarHome(
+                isDateSelected = isDateSelected,
+                onDateSelected = onDateSelected,
+                onDateResetSelected = onDateResetSelected,
                 onLogOutClicked = onLogOutClicked,
                 onDeleteAllDiaryEntriesClicked = onDeleteAllDiaryEntriesClicked
             )
