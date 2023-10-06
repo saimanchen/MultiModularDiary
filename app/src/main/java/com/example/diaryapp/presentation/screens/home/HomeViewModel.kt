@@ -71,7 +71,7 @@ class HomeViewModel @Inject constructor(
             if (::allDiaryEntriesJob.isInitialized) {
                 allDiaryEntriesJob.cancelAndJoin()
             }
-            MongoDB.getFilteredDiaryEntries(zonedDateTime = zonedDateTime).collect() { result ->
+            MongoDB.getFilteredDiaryEntries(zonedDateTime = zonedDateTime).collect { result ->
                 diaryEntries.value = result
             }
 
