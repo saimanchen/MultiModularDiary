@@ -48,8 +48,8 @@ fun TopBarWrite(
     navigateBack: () -> Unit,
     onDeleteConfirmClicked: () -> Unit
 ) {
-    val dateDialog = rememberUseCaseState()
-    val timeDialog = rememberUseCaseState()
+    val dateDialogState = rememberUseCaseState()
+    val timeDialogState = rememberUseCaseState()
     var isDateTimeUpdated by remember { mutableStateOf(false) }
     var currentDate by remember { mutableStateOf(LocalDate.now()) }
     var currentTime by remember { mutableStateOf(LocalTime.now()) }
@@ -115,7 +115,7 @@ fun TopBarWrite(
                     )
                 }
             } else {
-                IconButton(onClick = { dateDialog.show() }
+                IconButton(onClick = { dateDialogState.show() }
                 ) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
@@ -135,10 +135,10 @@ fun TopBarWrite(
         ),
     )
     CalendarDialog(
-        state = dateDialog,
+        state = dateDialogState,
         selection = CalendarSelection.Date { localDate ->
             currentDate = localDate
-            timeDialog.show()
+            timeDialogState.show()
         },
         config = CalendarConfig(
             monthSelection = true,
@@ -147,7 +147,7 @@ fun TopBarWrite(
         properties = DialogProperties()
     )
     ClockDialog(
-        state = timeDialog,
+        state = timeDialogState,
         selection = ClockSelection.HoursMinutes { hours, minutes ->
             currentTime = LocalTime.of(hours, minutes)
             isDateTimeUpdated = true
