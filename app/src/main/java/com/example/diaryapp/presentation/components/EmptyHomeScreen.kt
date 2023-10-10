@@ -13,11 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.diaryapp.model.remote.Diary
+import java.time.LocalDate
 
 @Composable
 fun EmptyHomeScreen(
+    diaryEntries: Map<LocalDate, List<Diary>> = mapOf(),
     title: String = "Empty Diary",
-    subtitle: String = "Write your first diary note"
+    subtitle: String = "Write your first diary note",
+    isDateSelected: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -28,7 +32,11 @@ fun EmptyHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = title,
+            text = if (isDateSelected && diaryEntries.isEmpty()) {
+                "Nothing was written this day"
+            } else {
+                title
+            },
             style = TextStyle(
                 fontSize = MaterialTheme.typography.titleMedium.fontSize,
                 fontWeight = FontWeight.Medium
@@ -37,7 +45,11 @@ fun EmptyHomeScreen(
 
         )
         Text(
-            text = subtitle,
+            text = if (isDateSelected && diaryEntries.isEmpty()) {
+                "Choose another date"
+            } else {
+                subtitle
+            },
             style = TextStyle(
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 fontWeight = FontWeight.Normal
