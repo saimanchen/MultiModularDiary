@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.diaryapp.data.repository.DiaryEntries
 import com.example.diaryapp.model.remote.Diary
 import java.time.LocalDate
 
@@ -34,7 +33,7 @@ fun EmptyHomeScreen(
     ) {
         Text(
             text = if (isDateSelected && diaryEntries.isEmpty()) {
-                "No diary entries was written during this date"
+                "Nothing was written this day"
             } else {
                 title
             },
@@ -46,7 +45,11 @@ fun EmptyHomeScreen(
 
         )
         Text(
-            text = subtitle,
+            text = if (isDateSelected && diaryEntries.isEmpty()) {
+                "Choose another date"
+            } else {
+                subtitle
+            },
             style = TextStyle(
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 fontWeight = FontWeight.Normal
