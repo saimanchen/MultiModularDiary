@@ -85,14 +85,16 @@ fun HomeScreen(
                     HomeContent(
                         paddingValues = it,
                         diaryEntries = diaryEntries.data,
-                        onClick = navigateToWriteWithArgs
+                        onClick = navigateToWriteWithArgs,
+                        isDateSelected = isDateSelected
                     )
                 }
 
                 is RequestState.Error -> {
                     EmptyHomeScreen(
                         title = "Error",
-                        subtitle = "${diaryEntries.error.message}"
+                        subtitle = "${diaryEntries.error.message}",
+                        isDateSelected = isDateSelected
                     )
                 }
             }
@@ -105,7 +107,8 @@ fun HomeScreen(
 fun HomeContent(
     paddingValues: PaddingValues,
     diaryEntries: Map<LocalDate, List<Diary>>,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    isDateSelected: Boolean
 ) {
     if (diaryEntries.isNotEmpty()) {
         LazyColumn(
@@ -130,6 +133,9 @@ fun HomeContent(
             }
         }
     } else {
-        EmptyHomeScreen()
+        EmptyHomeScreen(
+            diaryEntries = diaryEntries,
+            isDateSelected = isDateSelected
+        )
     }
 }
