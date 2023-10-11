@@ -1,11 +1,13 @@
 package com.example.diaryapp.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,13 +48,14 @@ fun ChooseMoodIconDialog(
             ),
             content = {
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = Shapes().extraSmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary)),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onBackground
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        disabledContainerColor = MaterialTheme.colorScheme.surface
                     ),
-                    elevation = CardDefaults.elevatedCardElevation(Elevation.Level1),
                 ) {
                     ChooseMoodIconContent(
                         onMoodIconChanged = onMoodIconChanged,
@@ -265,12 +268,11 @@ fun ChooseMoodIconContent(
         Spacer(modifier = Modifier.height(24.dp))
         OutlinedButton(
             onClick = onDialogClosed,
-            shape = Shapes().extraSmall,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.tertiary
+                contentColor = MaterialTheme.colorScheme.primary
             ),
-            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 text = "Close",
