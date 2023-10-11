@@ -36,7 +36,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun GalleryPager(
     galleryState: GalleryState,
-    galleryIndex: Int
+    galleryIndex: Int,
+    onShowImageTopBar: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -52,6 +53,11 @@ fun GalleryPager(
                 pageCount = galleryState.images.size,
                 state = pagerState
             ) { page ->
+                ZoomableImage(
+                    selectedGalleryImage = galleryState.images[page],
+                    onShowImageTopBar = onShowImageTopBar
+                )
+                /*
                 AsyncImage(
                     modifier = Modifier.fillMaxSize(),
                     model = ImageRequest.Builder(context)
@@ -61,6 +67,7 @@ fun GalleryPager(
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )
+                 */
             }
             PagerNavigation(
                 scope = scope,

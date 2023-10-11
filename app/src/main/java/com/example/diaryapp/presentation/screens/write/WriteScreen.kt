@@ -99,10 +99,33 @@ fun WriteScreen(
     }
 
     if (isGalleryClicked) {
-        GalleryPager(
-            galleryState = galleryState,
-            galleryIndex = galleryIndex
-        )
+        AnimatedVisibility(visible = true) {
+            Scaffold(
+                topBar = {
+                    TopBarImage(
+                        showImageTopBar = showImageTopBar,
+                        onNavigateBackClicked = { selectedGalleryImage = null },
+                        onDeleteClicked = {
+                            if (selectedGalleryImage != null) {
+                                onImageDeleteClicked(selectedGalleryImage!!)
+                                selectedGalleryImage = null
+                            }
+                        }
+                    )
+                },
+                content = {
+                    GalleryPager(
+                        galleryState = galleryState,
+                        galleryIndex = galleryIndex,
+                        onShowImageTopBar = {
+                            scope.launch {
+                                showImageTopBar = !showImageTopBar
+                            }
+                        }
+                    )
+                }
+            )
+        }
     } else if (selectedGalleryImage != null) {
         AnimatedVisibility(visible = true) {
             Scaffold(
