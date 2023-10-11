@@ -61,6 +61,7 @@ import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
+import com.example.diaryapp.presentation.components.GalleryPager
 import com.example.diaryapp.presentation.components.GalleryUploader
 import com.example.diaryapp.presentation.components.TopBarImage
 import com.example.diaryapp.presentation.components.TopBarWrite
@@ -88,37 +89,16 @@ fun WriteScreen(
 ) {
     val scope = rememberCoroutineScope()
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
+    var isGalleryClicked by remember { mutableStateOf(false) }
     var showImageTopBar by remember { mutableStateOf(true) }
 
     BackHandler(selectedGalleryImage != null) {
         selectedGalleryImage = null
     }
 
-    if (selectedGalleryImage == null) {
-        Scaffold(
-            topBar = {
-                TopBarWrite(
-                    selectedDiary = diaryState.selectedDiary,
-                    navigateBack = navigateBack,
-                    onDeleteConfirmClicked = onDeleteConfirmClicked,
-                    onDateTimeUpdated = onDateTimeUpdated
-                )
-            },
-            content = { paddingValues ->
-                WriteContent(
-                    diaryState = diaryState,
-                    galleryState = galleryState,
-                    onTitleChanged = onTitleChanged,
-                    onDescriptionChanged = onDescriptionChanged,
-                    onMoodIconChanged = onMoodIconChanged,
-                    paddingValues = paddingValues,
-                    onSaveClicked = onSaveClicked,
-                    onImageSelected = onImageSelected,
-                    onImageClicked = { selectedGalleryImage = it }
-                )
-            }
-        )
-    } else {
+    if (isGalleryClicked) {
+        GalleryPager(galleryState = galleryState)
+    } else if (selectedGalleryImage != null) {
         AnimatedVisibility(visible = true) {
             Scaffold(
                 topBar = {
@@ -132,7 +112,6 @@ fun WriteScreen(
                             }
                         }
                     )
-
                 },
                 content = {
                     Box(
@@ -155,8 +134,31 @@ fun WriteScreen(
                     }
                 }
             )
-
         }
+    } else {
+        Scaffold(
+            topBar = {
+                TopBarWrite(
+                    selectedDiary = diaryState.selectedDiary,
+                    navigateBack = navigateBack,
+                    onDeleteConfirmClicked = onDeleteConfirmClicked,
+                    onDateTimeUpdated = onDateTimeUpdated
+                )
+            },
+            content = { paddingValues ->
+                WriteContent(
+                    diaryState = diaryState,
+                    galleryState = galleryState,
+                    onTitleChanged = onTitleChanged,
+                    onDescriptionChanged = onDescriptionChanged,
+                    onMoodIconChanged = onMoodIconChanged,
+                    paddingValues = paddingValues,
+                    onSaveClicked = onSaveClicked,
+                    onImageSelected = onImageSelected,
+                    onImageClicked = { isGalleryClicked = true }
+                )
+            }
+        )
     }
 }
 
@@ -170,7 +172,7 @@ fun WriteContent(
     paddingValues: PaddingValues,
     onSaveClicked: (Diary) -> Unit,
     onImageSelected: (Uri) -> Unit,
-    onImageClicked: (GalleryImage) -> Unit
+    onImageClicked: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -308,7 +310,7 @@ fun WriteContent(
                 imageSize = 40.dp,
                 onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
-                onImageClicked = onImageClicked
+                onGalleryClicked = onImageClicked
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(

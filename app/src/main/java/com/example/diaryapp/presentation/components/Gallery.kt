@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.util.Elevation
 import com.example.diaryapp.util.GalleryState
 import kotlin.math.max
@@ -116,7 +115,7 @@ fun GalleryUploader(
     spaceBetween: Dp = 12.dp,
     onAddClicked: () -> Unit,
     onImageSelected: (Uri) -> Unit,
-    onImageClicked: (GalleryImage) -> Unit
+    onGalleryClicked: () -> Unit
 ) {
     val multiplePhotoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 8),
@@ -159,7 +158,7 @@ fun GalleryUploader(
                 AsyncImage(
                     modifier = Modifier
                         .size(imageSize)
-                        .clickable { onImageClicked(galleryImage) },
+                        .clickable { onGalleryClicked() },
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(galleryImage.image)
                         .crossfade(true)
