@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -30,12 +31,16 @@ import coil.request.ImageRequest
 import com.example.diaryapp.R
 import com.example.diaryapp.presentation.screens.write.DiaryState
 import com.example.diaryapp.util.GalleryState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GalleryPager(
     galleryState: GalleryState
 ) {
+    val scope = rememberCoroutineScope()
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -58,13 +63,22 @@ fun GalleryPager(
                     contentScale = ContentScale.FillWidth
                 )
             }
-            PagerNavigation()
+            PagerNavigation(
+                scope = scope,
+                galleryState = galleryState,
+                pagerState = pagerState
+            )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PagerNavigation() {
+fun PagerNavigation(
+    scope: CoroutineScope,
+    galleryState: GalleryState,
+    pagerState: PagerState
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +86,11 @@ fun PagerNavigation() {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(0)
+                }
+            },
             colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(
@@ -81,7 +99,11 @@ fun PagerNavigation() {
             )
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                }
+            },
             colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(
@@ -90,7 +112,11 @@ fun PagerNavigation() {
             )
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                }
+            },
             colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(
@@ -99,7 +125,11 @@ fun PagerNavigation() {
             )
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(galleryState.images.size - 1)
+                }
+            },
             colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.primary)
         ) {
             Icon(
