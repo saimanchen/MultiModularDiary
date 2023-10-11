@@ -1,6 +1,7 @@
 package com.example.diaryapp.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.diaryapp.model.remote.Mood
-import com.example.diaryapp.util.Elevation
 
 @Composable
 fun ChooseMoodIconDialog(
@@ -46,13 +45,14 @@ fun ChooseMoodIconDialog(
             ),
             content = {
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = Shapes().extraSmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary)),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onBackground
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        disabledContainerColor = MaterialTheme.colorScheme.surface
                     ),
-                    elevation = CardDefaults.elevatedCardElevation(Elevation.Level1),
                 ) {
                     ChooseMoodIconContent(
                         onMoodIconChanged = onMoodIconChanged,
@@ -265,12 +265,11 @@ fun ChooseMoodIconContent(
         Spacer(modifier = Modifier.height(24.dp))
         OutlinedButton(
             onClick = onDialogClosed,
-            shape = Shapes().extraSmall,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.tertiary
+                contentColor = MaterialTheme.colorScheme.primary
             ),
-            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 text = "Close",
