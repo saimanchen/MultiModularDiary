@@ -18,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.diaryapp.R
-import com.example.diaryapp.presentation.screens.write.DiaryState
 import com.example.diaryapp.util.GalleryState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,7 +35,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GalleryPager(
-    galleryState: GalleryState
+    galleryState: GalleryState,
+    galleryIndex: Int
 ) {
     val scope = rememberCoroutineScope()
 
@@ -45,7 +44,7 @@ fun GalleryPager(
         modifier = Modifier.fillMaxSize()
     ) {
         val context = LocalContext.current
-        val pagerState = rememberPagerState(initialPage = 0)
+        val pagerState = rememberPagerState(initialPage = galleryIndex)
 
         Column {
             HorizontalPager(

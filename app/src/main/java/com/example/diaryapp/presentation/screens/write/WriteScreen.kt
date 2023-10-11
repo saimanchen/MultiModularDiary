@@ -41,6 +41,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -90,6 +91,7 @@ fun WriteScreen(
     val scope = rememberCoroutineScope()
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
     var isGalleryClicked by remember { mutableStateOf(false) }
+    var galleryIndex by remember { mutableIntStateOf(0) }
     var showImageTopBar by remember { mutableStateOf(true) }
 
     BackHandler(selectedGalleryImage != null) {
@@ -97,7 +99,10 @@ fun WriteScreen(
     }
 
     if (isGalleryClicked) {
-        GalleryPager(galleryState = galleryState)
+        GalleryPager(
+            galleryState = galleryState,
+            galleryIndex = galleryIndex
+        )
     } else if (selectedGalleryImage != null) {
         AnimatedVisibility(visible = true) {
             Scaffold(
@@ -127,7 +132,6 @@ fun WriteScreen(
                                     scope.launch {
                                         showImageTopBar = !showImageTopBar
                                     }
-
                                 }
                             )
                         }
@@ -155,7 +159,10 @@ fun WriteScreen(
                     paddingValues = paddingValues,
                     onSaveClicked = onSaveClicked,
                     onImageSelected = onImageSelected,
-                    onImageClicked = { isGalleryClicked = true }
+                    onImageClicked = {
+                        galleryIndex = it
+                        isGalleryClicked = true
+                    }
                 )
             }
         )
@@ -172,7 +179,7 @@ fun WriteContent(
     paddingValues: PaddingValues,
     onSaveClicked: (Diary) -> Unit,
     onImageSelected: (Uri) -> Unit,
-    onImageClicked: () -> Unit
+    onImageClicked: (Int) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -310,7 +317,7 @@ fun WriteContent(
                 imageSize = 40.dp,
                 onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
-                onGalleryClicked = onImageClicked
+                onImageClicked = { onImageClicked(it) }
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
