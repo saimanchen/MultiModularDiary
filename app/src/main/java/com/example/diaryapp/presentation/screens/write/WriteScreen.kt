@@ -90,7 +90,7 @@ fun WriteScreen(
 ) {
     val scope = rememberCoroutineScope()
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
-    var isGalleryClicked by remember { mutableStateOf(false) }
+    var isGalleryOpened by remember { mutableStateOf(false) }
     var galleryIndex by remember { mutableIntStateOf(0) }
     var showImageTopBar by remember { mutableStateOf(true) }
 
@@ -98,18 +98,27 @@ fun WriteScreen(
         selectedGalleryImage = null
     }
 
-    if (isGalleryClicked) {
+    if (isGalleryOpened) {
         AnimatedVisibility(visible = true) {
             Scaffold(
                 topBar = {
                     TopBarImage(
                         showImageTopBar = showImageTopBar,
-                        onNavigateBackClicked = { selectedGalleryImage = null },
+                        onNavigateBackClicked = {
+                            selectedGalleryImage = null
+                            isGalleryOpened = false
+                        },
                         onDeleteClicked = {
                             if (selectedGalleryImage != null) {
                                 onImageDeleteClicked(selectedGalleryImage!!)
-                                selectedGalleryImage = null
+                                selectedGalleryImage =
+                                    if (galleryState.images.isNotEmpty()) {
+                                        galleryState.images[0]
+                                    } else {
+                                        null
+                                    }
                             }
+                            if (galleryState.images.isEmpty()) isGalleryOpened = false
                         }
                     )
                 },
@@ -182,9 +191,10 @@ fun WriteScreen(
                     paddingValues = paddingValues,
                     onSaveClicked = onSaveClicked,
                     onImageSelected = onImageSelected,
-                    onImageClicked = {
-                        galleryIndex = it
-                        isGalleryClicked = true
+                    onImageClicked = { index, galleryImage ->
+                        galleryIndex = index
+                        selectedGalleryImage = galleryImage
+                        isGalleryOpened = true
                     }
                 )
             }
@@ -202,7 +212,7 @@ fun WriteContent(
     paddingValues: PaddingValues,
     onSaveClicked: (Diary) -> Unit,
     onImageSelected: (Uri) -> Unit,
-    onImageClicked: (Int) -> Unit
+    onImageClicked: (Int, GalleryImage) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -340,7 +350,7 @@ fun WriteContent(
                 imageSize = 40.dp,
                 onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
-                onImageClicked = { onImageClicked(it) }
+                onImageClicked = onImageClicked
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
