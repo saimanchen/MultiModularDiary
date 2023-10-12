@@ -2,10 +2,10 @@ package com.example.diaryapp.presentation.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +23,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,17 +41,24 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GalleryPager(
+    paddingValues: PaddingValues,
     galleryState: GalleryState,
     galleryIndex: Int,
-    onShowImageTopBar: () -> Unit
+    onSelectedGalleryImageChanged: (Int) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = paddingValues.calculateTopPadding())
     ) {
         val pagerState = rememberPagerState(initialPage = galleryIndex)
+
+        LaunchedEffect(key1 = pagerState.currentPage, block = {
+            onSelectedGalleryImageChanged(pagerState.currentPage)
+        })
 
         Column {
             HorizontalPager(
@@ -59,18 +66,12 @@ fun GalleryPager(
                     .weight(1f),
                 pageSize = PageSize.Fixed(350.dp),
                 pageCount = galleryState.images.size,
-                pageSpacing = 24.dp,
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                pageSpacing = 12.dp,
                 state = pagerState,
             ) { page ->
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember {
-                                MutableInteractionSource()
-                            }
-                        ) { onShowImageTopBar() },
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(

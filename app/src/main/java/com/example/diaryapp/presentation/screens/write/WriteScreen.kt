@@ -2,6 +2,7 @@ package com.example.diaryapp.presentation.screens.write
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -69,6 +70,7 @@ import com.example.diaryapp.presentation.components.TopBarWrite
 import com.example.diaryapp.presentation.components.ZoomableImage
 import com.example.diaryapp.util.GalleryState
 import io.realm.kotlin.ext.toRealmList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
@@ -107,29 +109,36 @@ fun WriteScreen(
                         onNavigateBackClicked = {
                             selectedGalleryImage = null
                             isGalleryOpened = false
-                        },
-                        onDeleteClicked = {
-                            if (selectedGalleryImage != null) {
-                                onImageDeleteClicked(selectedGalleryImage!!)
-                                selectedGalleryImage =
-                                    if (galleryState.images.isNotEmpty()) {
-                                        galleryState.images[0]
-                                    } else {
-                                        null
-                                    }
-                            }
-                            if (galleryState.images.isEmpty()) isGalleryOpened = false
                         }
-                    )
+                    ) {
+                        if (selectedGalleryImage != null) {
+                            Log.d("galleryIndex", "index: $galleryIndex")
+                            Log.d("galleryIndex", "size: ${galleryState.images.size}")
+
+                            onImageDeleteClicked(selectedGalleryImage!!)
+                            selectedGalleryImage =
+                                if (
+                                    galleryState.images.isNotEmpty() &&
+                                    galleryIndex == galleryState.images.size
+                                    ) {
+                                    galleryState.images[galleryIndex - 1]
+                                } else if (galleryState.images.isNotEmpty()) {
+                                    galleryState.images[galleryIndex]
+                                } else {
+                                    null
+                                }
+                        }
+                        if (galleryState.images.isEmpty()) isGalleryOpened = false
+                    }
                 },
-                content = {
+                content = { paddingValues ->
                     GalleryPager(
+                        paddingValues = paddingValues,
                         galleryState = galleryState,
                         galleryIndex = galleryIndex,
-                        onShowImageTopBar = {
-                            scope.launch {
-                                showImageTopBar = !showImageTopBar
-                            }
+                        onSelectedGalleryImageChanged = {
+                            galleryIndex = it
+                            selectedGalleryImage = galleryState.images[galleryIndex]
                         }
                     )
                 }
