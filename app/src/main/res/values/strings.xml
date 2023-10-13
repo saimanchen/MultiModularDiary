@@ -2,6 +2,14 @@
     <string name="app_name">DiaryApp</string>
     <string name="auth_title">Welcome</string>
     <string name="auth_subtitle">Please sign in to continue.</string>
+    <string name="close">Close</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="on_image_download_failed">Image not downloaded yet. Wait or try to upload again</string>
+    <string name="empty_diary">Empty diary</string>
+    <string name="write_your_first_diary_note">Write your first diary note</string>
+    <string name="nothing_was_written">Nothing was written this day</string>
+    <string name="choose_another_day">Choose another day</string>
 
     <string name="angry_icon">Angry Icon</string>
     <string name="confounded_icon">Confounded Icon</string>
@@ -21,9 +29,4 @@
     <string name="surprised_icon">Surprised Icon</string>
     <string name="suspicious_icon">Suspicious Icon</string>
     <string name="tired_bored_icon">Tired Bored Icon</string>
-
-    <string name="close">Close</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
-    <string name="on_image_download_failed">Image not downloaded yet. Wait or try to upload again</string>
 </resources>
