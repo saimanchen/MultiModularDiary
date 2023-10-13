@@ -22,7 +22,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.diaryapp.R
 import com.example.diaryapp.data.repository.DiaryEntries
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.presentation.components.DateHeader
@@ -65,7 +67,7 @@ fun HomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add new entry"
+                    contentDescription = stringResource(id = R.string.add_new_diary_entry)
                 )
             }
         },
