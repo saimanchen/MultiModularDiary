@@ -54,10 +54,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.diaryapp.R
 import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.remote.Mood
@@ -242,6 +244,7 @@ fun WriteContent(
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
+    var fieldCantBeEmptyToastMessageText = stringResource(id = R.string.fields_cant_be_empty)
 
     LaunchedEffect(key1 = scrollState) {
         scrollState.scrollTo(scrollState.maxValue)
@@ -268,7 +271,7 @@ fun WriteContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Mood:",
+                    text = stringResource(id = R.string.mood),
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = MaterialTheme.typography.titleLarge.fontSize,
@@ -340,7 +343,7 @@ fun WriteContent(
                         ),
                         placeholder = {
                             Text(
-                                text = "Tell me about it!",
+                                text = stringResource(id = R.string.tell_me_about_it),
                                 style = TextStyle(
                                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                     fontWeight = FontWeight.Light
@@ -393,7 +396,7 @@ fun WriteContent(
                     } else {
                         Toast.makeText(
                             context,
-                            "Fields can't be empty",
+                            fieldCantBeEmptyToastMessageText,
                             Toast.LENGTH_SHORT
                         ).show()
                     }

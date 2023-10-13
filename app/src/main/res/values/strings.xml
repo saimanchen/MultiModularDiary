@@ -29,6 +29,10 @@
     <string name="delete_diary_entry">Delete Diary Entry</string>
     <string name="not_specified">Not Specified</string>
     <string name="add_new_diary_entry">Add New Diary Entry</string>
+    <string name="mood">Mood:</string>
+    <string name="title">Title</string>
+    <string name="tell_me_about_it">Tell me about it!</string>
+    <string name="fields_cant_be_empty">Fields can\'t be empty</string>
 
     <string name="angry_icon">Angry Icon</string>
     <string name="confounded_icon">Confounded Icon</string>
