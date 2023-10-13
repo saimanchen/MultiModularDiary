@@ -24,6 +24,10 @@
     <string name="delete_all_diary_entries">Delete All Diary Entries</string>
     <string name="navigate_back">Navigate Back</string>
     <string name="delete">Delete</string>
+    <string name="delete_custom_time">Delete Custom Time</string>
+    <string name="choose_date_time">Choose Date And Time</string>
+    <string name="delete_diary_entry">Delete Diary Entry</string>
+    <string name="not_specified">Not Specified</string>
 
     <string name="angry_icon">Angry Icon</string>
     <string name="confounded_icon">Confounded Icon</string>
