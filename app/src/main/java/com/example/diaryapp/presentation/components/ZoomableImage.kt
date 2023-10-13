@@ -15,8 +15,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.diaryapp.R
 import com.example.diaryapp.model.GalleryImage
 
 @Composable
@@ -61,7 +63,7 @@ fun ZoomableImage(
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Fit,
-            contentDescription = "Gallery Image"
+            contentDescription = stringResource(id = R.string.gallery_image)
         )
     }
 }
