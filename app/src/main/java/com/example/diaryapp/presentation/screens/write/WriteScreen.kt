@@ -41,6 +41,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -61,6 +62,7 @@ import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
+import com.example.diaryapp.presentation.components.GalleryPager
 import com.example.diaryapp.presentation.components.GalleryUploader
 import com.example.diaryapp.presentation.components.TopBarImage
 import com.example.diaryapp.presentation.components.TopBarWrite
@@ -88,13 +90,112 @@ fun WriteScreen(
 ) {
     val scope = rememberCoroutineScope()
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
+    var isGalleryOpened by remember { mutableStateOf(false) }
+    var showZoomableImage by remember { mutableStateOf(false) }
+    var galleryIndex by remember { mutableIntStateOf(0) }
     var showImageTopBar by remember { mutableStateOf(true) }
 
-    BackHandler(selectedGalleryImage != null) {
+    BackHandler(enabled = selectedGalleryImage != null) {
         selectedGalleryImage = null
     }
+    BackHandler(enabled = showZoomableImage) {
+        showZoomableImage = false
+    }
 
-    if (selectedGalleryImage == null) {
+    if (isGalleryOpened && !showZoomableImage) {
+        AnimatedVisibility(visible = true) {
+            Scaffold(
+                topBar = {
+                    TopBarImage(
+                        showImageTopBar = showImageTopBar,
+                        showZoomableImage = showZoomableImage,
+                        onNavigateBackClicked = {
+                            selectedGalleryImage = null
+                            isGalleryOpened = false
+                        },
+                        onDeleteClicked = {
+                            if (selectedGalleryImage != null) {
+                                onImageDeleteClicked(selectedGalleryImage!!)
+                                selectedGalleryImage =
+                                    if (
+                                        galleryState.images.isNotEmpty() &&
+                                        galleryIndex == galleryState.images.size
+                                    ) {
+                                        galleryState.images[galleryIndex - 1]
+                                    } else if (galleryState.images.isNotEmpty()) {
+                                        galleryState.images[galleryIndex]
+                                    } else {
+                                        null
+                                    }
+                            }
+                            if (galleryState.images.isEmpty()) isGalleryOpened = false
+                        }
+                    )
+                },
+                content = { paddingValues ->
+                    GalleryPager(
+                        paddingValues = paddingValues,
+                        galleryState = galleryState,
+                        galleryIndex = galleryIndex,
+                        onSelectedGalleryImageChanged = {
+                            galleryIndex = it
+                            selectedGalleryImage = galleryState.images[galleryIndex]
+                        },
+                        onShowZoomableImageClicked = { showZoomableImage = true }
+                    )
+                }
+            )
+        }
+    } else if (showZoomableImage) {
+        AnimatedVisibility(visible = true) {
+            Scaffold(
+                topBar = {
+                    TopBarImage(
+                        showImageTopBar = showImageTopBar,
+                        showZoomableImage = showZoomableImage,
+                        onNavigateBackClicked = { showZoomableImage = false },
+                        onDeleteClicked = {
+                            if (selectedGalleryImage != null) {
+                                onImageDeleteClicked(selectedGalleryImage!!)
+                                selectedGalleryImage =
+                                    if (
+                                        galleryState.images.isNotEmpty() &&
+                                        galleryIndex == galleryState.images.size
+                                    ) {
+                                        galleryState.images[galleryIndex - 1]
+                                    } else if (galleryState.images.isNotEmpty()) {
+                                        galleryState.images[galleryIndex]
+                                    } else {
+                                        null
+                                    }
+                                showZoomableImage = false
+                            }
+                            if (galleryState.images.isEmpty()) isGalleryOpened = false
+                        }
+                    )
+                },
+                content = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        selectedGalleryImage?.let { galleryImage ->
+                            ZoomableImage(
+                                selectedGalleryImage = galleryImage,
+                                onShowImageTopBar = {
+                                    scope.launch {
+                                        showImageTopBar = !showImageTopBar
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    } else {
         Scaffold(
             topBar = {
                 TopBarWrite(
@@ -114,49 +215,14 @@ fun WriteScreen(
                     paddingValues = paddingValues,
                     onSaveClicked = onSaveClicked,
                     onImageSelected = onImageSelected,
-                    onImageClicked = { selectedGalleryImage = it }
+                    onImageClicked = { index, galleryImage ->
+                        galleryIndex = index
+                        selectedGalleryImage = galleryImage
+                        isGalleryOpened = true
+                    }
                 )
             }
         )
-    } else {
-        AnimatedVisibility(visible = true) {
-            Scaffold(
-                topBar = {
-                    TopBarImage(
-                        showImageTopBar = showImageTopBar,
-                        onNavigateBackClicked = { selectedGalleryImage = null },
-                        onDeleteClicked = {
-                            if (selectedGalleryImage != null) {
-                                onImageDeleteClicked(selectedGalleryImage!!)
-                                selectedGalleryImage = null
-                            }
-                        }
-                    )
-
-                },
-                content = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        selectedGalleryImage?.let { galleryImage ->
-                            ZoomableImage(
-                                selectedGalleryImage = galleryImage,
-                                onShowImageTopBar = {
-                                    scope.launch {
-                                        showImageTopBar = !showImageTopBar
-                                    }
-
-                                }
-                            )
-                        }
-                    }
-                }
-            )
-
-        }
     }
 }
 
@@ -170,7 +236,7 @@ fun WriteContent(
     paddingValues: PaddingValues,
     onSaveClicked: (Diary) -> Unit,
     onImageSelected: (Uri) -> Unit,
-    onImageClicked: (GalleryImage) -> Unit
+    onImageClicked: (Int, GalleryImage) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

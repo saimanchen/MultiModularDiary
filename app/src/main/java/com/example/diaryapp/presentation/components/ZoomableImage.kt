@@ -2,6 +2,7 @@ package com.example.diaryapp.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -49,7 +50,12 @@ fun ZoomableImage(
                     translationX = offsetX,
                     translationY = offsetY
                 )
-                .clickable { onShowImageTopBar() },
+                .clickable(
+                    indication = null,
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    }
+                ) { onShowImageTopBar() },
             model = ImageRequest.Builder(LocalContext.current)
                 .data(selectedGalleryImage.image.toString())
                 .crossfade(true)

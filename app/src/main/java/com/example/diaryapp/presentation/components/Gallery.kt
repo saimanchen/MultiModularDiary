@@ -116,7 +116,7 @@ fun GalleryUploader(
     spaceBetween: Dp = 12.dp,
     onAddClicked: () -> Unit,
     onImageSelected: (Uri) -> Unit,
-    onImageClicked: (GalleryImage) -> Unit
+    onImageClicked: (Int, GalleryImage) -> Unit
 ) {
     val multiplePhotoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = 8),
@@ -155,11 +155,12 @@ fun GalleryUploader(
                 }
             )
             Spacer(modifier = Modifier.width(spaceBetween))
-            galleryState.images.take(numberOfVisibleImages.value).forEach { galleryImage ->
+            for ((index, galleryImage) in galleryState.images.take(numberOfVisibleImages.value).withIndex()) {
+            //galleryState.images.take(numberOfVisibleImages.value).forEach { galleryImage ->
                 AsyncImage(
                     modifier = Modifier
                         .size(imageSize)
-                        .clickable { onImageClicked(galleryImage) },
+                        .clickable { onImageClicked(index, galleryImage) },
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(galleryImage.image)
                         .crossfade(true)

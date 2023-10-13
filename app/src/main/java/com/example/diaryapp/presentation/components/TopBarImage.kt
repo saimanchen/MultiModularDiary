@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 @ExperimentalMaterial3Api
 @Composable
 fun TopBarImage(
+    showZoomableImage: Boolean,
     showImageTopBar: Boolean,
     onNavigateBackClicked: () -> Unit,
     onDeleteClicked: () -> Unit
@@ -48,7 +50,7 @@ fun TopBarImage(
             navigationIcon = {
                 IconButton(onClick = onNavigateBackClicked) {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        imageVector = if (showZoomableImage) Icons.Default.Close else Icons.Default.KeyboardArrowLeft,
                         contentDescription = "Navigate Back"
                     )
                 }
