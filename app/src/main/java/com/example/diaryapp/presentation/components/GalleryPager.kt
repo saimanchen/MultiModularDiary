@@ -45,6 +45,7 @@ fun GalleryPager(
     galleryState: GalleryState,
     galleryIndex: Int,
     onSelectedGalleryImageChanged: (Int) -> Unit,
+    onShowZoomableImageClicked: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -77,7 +78,7 @@ fun GalleryPager(
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { },
+                            .clickable { onShowZoomableImageClicked() },
                         model =
                         ImageRequest.Builder(context)
                             .data(galleryState.images[page].image)

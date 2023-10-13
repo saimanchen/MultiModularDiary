@@ -2,7 +2,6 @@ package com.example.diaryapp.presentation.screens.write
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -70,7 +69,6 @@ import com.example.diaryapp.presentation.components.TopBarWrite
 import com.example.diaryapp.presentation.components.ZoomableImage
 import com.example.diaryapp.util.GalleryState
 import io.realm.kotlin.ext.toRealmList
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
@@ -93,43 +91,46 @@ fun WriteScreen(
     val scope = rememberCoroutineScope()
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
     var isGalleryOpened by remember { mutableStateOf(false) }
+    var showZoomableImage by remember { mutableStateOf(false) }
     var galleryIndex by remember { mutableIntStateOf(0) }
     var showImageTopBar by remember { mutableStateOf(true) }
 
-    BackHandler(selectedGalleryImage != null) {
+    BackHandler(enabled = selectedGalleryImage != null) {
         selectedGalleryImage = null
     }
+    BackHandler(enabled = showZoomableImage) {
+        showZoomableImage = false
+    }
 
-    if (isGalleryOpened) {
+    if (isGalleryOpened && !showZoomableImage) {
         AnimatedVisibility(visible = true) {
             Scaffold(
                 topBar = {
                     TopBarImage(
                         showImageTopBar = showImageTopBar,
+                        showZoomableImage = showZoomableImage,
                         onNavigateBackClicked = {
                             selectedGalleryImage = null
                             isGalleryOpened = false
-                        }
-                    ) {
-                        if (selectedGalleryImage != null) {
-                            Log.d("galleryIndex", "index: $galleryIndex")
-                            Log.d("galleryIndex", "size: ${galleryState.images.size}")
-
-                            onImageDeleteClicked(selectedGalleryImage!!)
-                            selectedGalleryImage =
-                                if (
-                                    galleryState.images.isNotEmpty() &&
-                                    galleryIndex == galleryState.images.size
+                        },
+                        onDeleteClicked = {
+                            if (selectedGalleryImage != null) {
+                                onImageDeleteClicked(selectedGalleryImage!!)
+                                selectedGalleryImage =
+                                    if (
+                                        galleryState.images.isNotEmpty() &&
+                                        galleryIndex == galleryState.images.size
                                     ) {
-                                    galleryState.images[galleryIndex - 1]
-                                } else if (galleryState.images.isNotEmpty()) {
-                                    galleryState.images[galleryIndex]
-                                } else {
-                                    null
-                                }
+                                        galleryState.images[galleryIndex - 1]
+                                    } else if (galleryState.images.isNotEmpty()) {
+                                        galleryState.images[galleryIndex]
+                                    } else {
+                                        null
+                                    }
+                            }
+                            if (galleryState.images.isEmpty()) isGalleryOpened = false
                         }
-                        if (galleryState.images.isEmpty()) isGalleryOpened = false
-                    }
+                    )
                 },
                 content = { paddingValues ->
                     GalleryPager(
@@ -139,23 +140,37 @@ fun WriteScreen(
                         onSelectedGalleryImageChanged = {
                             galleryIndex = it
                             selectedGalleryImage = galleryState.images[galleryIndex]
-                        }
+                        },
+                        onShowZoomableImageClicked = { showZoomableImage = true }
                     )
                 }
             )
         }
-    } else if (selectedGalleryImage != null) {
+    } else if (showZoomableImage) {
         AnimatedVisibility(visible = true) {
             Scaffold(
                 topBar = {
                     TopBarImage(
                         showImageTopBar = showImageTopBar,
-                        onNavigateBackClicked = { selectedGalleryImage = null },
+                        showZoomableImage = showZoomableImage,
+                        onNavigateBackClicked = { showZoomableImage = false },
                         onDeleteClicked = {
                             if (selectedGalleryImage != null) {
                                 onImageDeleteClicked(selectedGalleryImage!!)
-                                selectedGalleryImage = null
+                                selectedGalleryImage =
+                                    if (
+                                        galleryState.images.isNotEmpty() &&
+                                        galleryIndex == galleryState.images.size
+                                    ) {
+                                        galleryState.images[galleryIndex - 1]
+                                    } else if (galleryState.images.isNotEmpty()) {
+                                        galleryState.images[galleryIndex]
+                                    } else {
+                                        null
+                                    }
+                                showZoomableImage = false
                             }
+                            if (galleryState.images.isEmpty()) isGalleryOpened = false
                         }
                     )
                 },
