@@ -276,7 +276,7 @@ fun ChooseMoodIconContent(
             border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = "Close",
+                text = stringResource(id = R.string.close),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                     fontWeight = FontWeight.Light

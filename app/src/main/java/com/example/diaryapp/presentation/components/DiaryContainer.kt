@@ -43,6 +43,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -70,7 +71,8 @@ fun DiaryContainer(
     var componentHeight by remember { mutableStateOf(0.dp) }
     var showContent by remember { mutableStateOf(false) }
     var isGalleryLoading by remember { mutableStateOf(false) }
-    val downloadedImages = remember { mutableStateListOf<Uri>() }
+    var downloadedImages = remember { mutableStateListOf<Uri>() }
+    var downloadImageFailedMessage = stringResource(id = R.string.on_image_download_failed)
 
     LaunchedEffect(key1 = showContent) {
         if (showContent && downloadedImages.isEmpty()) {
@@ -83,8 +85,7 @@ fun DiaryContainer(
                 onImageDownloadFailed = {
                     Toast.makeText(
                         context,
-                        "Images not uploaded yet." +
-                                "Wait a little bit, or try to upload again",
+                        downloadImageFailedMessage,
                         Toast.LENGTH_SHORT
                     ).show()
                     isGalleryLoading = false

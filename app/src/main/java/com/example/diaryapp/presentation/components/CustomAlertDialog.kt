@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.diaryapp.R
 
 @Composable
 fun CustomAlertDialog(
@@ -63,7 +65,7 @@ fun CustomAlertDialog(
                     shape = RoundedCornerShape(1.dp),
                 ) {
                     Text(
-                        text = "Confirm",
+                        text = stringResource(id = R.string.confirm),
                         style = TextStyle(
                             fontWeight = FontWeight.Light
                         )
@@ -86,7 +88,7 @@ fun CustomAlertDialog(
                     )
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(id = R.string.cancel),
                         style = TextStyle(
                             fontWeight = FontWeight.Light
                         )
