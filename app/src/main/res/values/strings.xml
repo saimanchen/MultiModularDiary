@@ -10,6 +10,8 @@
     <string name="write_your_first_diary_note">Write your first diary note</string>
     <string name="nothing_was_written">Nothing was written this day</string>
     <string name="choose_another_day">Choose another day</string>
+    <string name="gallery_image">Gallery Image</string>
+    <string name="add_new_image">Add New Image</string>
 
     <string name="angry_icon">Angry Icon</string>
     <string name="confounded_icon">Confounded Icon</string>
