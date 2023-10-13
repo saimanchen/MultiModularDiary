@@ -2,4 +2,25 @@
     <string name="app_name">DiaryApp</string>
     <string name="auth_title">Welcome</string>
     <string name="auth_subtitle">Please sign in to continue.</string>
+
+    <string name="angry_icon">Angry Icon</string>
+    <string name="confounded_icon">Confounded Icon</string>
+    <string name="cool_icon">Cool Icon</string>
+    <string name="crying_icon">Crying Icon</string>
+    <string name="dead_icon">Dead Icon</string>
+    <string name="disappointed_icon">Disappointed Icon</string>
+    <string name="discouraged_icon">Discouraged Icon</string>
+    <string name="disgusted_icon">Disgusted Icon</string>
+    <string name="very_disgusted_icon">Very Disgusted Icon</string>
+    <string name="funny_icon">Funny Icon</string>
+    <string name="happy_icon">Happy Icon</string>
+    <string name="very_happy_icon">Very Happy Icon</string>
+    <string name="loving_it_icon">Loving It Icon</string>
+    <string name="neutral_icon">Neutral Icon</string>
+    <string name="stressed_icon">Stressed Icon</string>
+    <string name="surprised_icon">Surprised Icon</string>
+    <string name="suspicious_icon">Suspicious Icon</string>
+    <string name="tired_bored_icon">Tired Bored Icon</string>
+
+    <string name="close">Close</string>
 </resources>

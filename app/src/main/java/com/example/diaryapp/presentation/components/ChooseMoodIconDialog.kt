@@ -25,11 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.diaryapp.R
 import com.example.diaryapp.model.remote.Mood
 
 @Composable
@@ -124,43 +126,43 @@ fun ChooseMoodIconContent(
         ) {
             MoodIcon(
                 resource = Mood.Angry,
-                contentDescription = "Angry Icon",
+                contentDescription = stringResource(id = R.string.angry_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Confounded,
-                contentDescription = "Confounded Icon",
+                contentDescription = stringResource(id = R.string.confounded_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Cool,
-                contentDescription = "Cool Icon",
+                contentDescription = stringResource(id = R.string.cool_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Crying,
-                contentDescription = "Crying Icon",
+                contentDescription = stringResource(id = R.string.crying_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Dead,
-                contentDescription = "Dead Icon",
+                contentDescription = stringResource(id = R.string.dead_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Disappointed,
-                contentDescription = "Disappointed Icon",
+                contentDescription = stringResource(id = R.string.disappointed_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Discouraged,
-                contentDescription = "Discouraged Icon",
+                contentDescription = stringResource(id = R.string.discouraged_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
@@ -173,43 +175,43 @@ fun ChooseMoodIconContent(
         ) {
             MoodIcon(
                 resource = Mood.Disgusted,
-                contentDescription = "Disgusted Icon",
+                contentDescription = stringResource(id = R.string.disgusted_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.VeryDisgusted,
-                contentDescription = "Very Disgusted Icon",
+                contentDescription = stringResource(id = R.string.very_disgusted_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Funny,
-                contentDescription = "Funny Icon",
+                contentDescription = stringResource(id = R.string.funny_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Happy,
-                contentDescription = "Happy Icon",
+                contentDescription = stringResource(id = R.string.happy_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.VeryHappy,
-                contentDescription = "Very Happy Icon",
+                contentDescription = stringResource(id = R.string.very_happy_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.LovingIt,
-                contentDescription = "Loving It Icon",
+                contentDescription = stringResource(id = R.string.loving_it_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Neutral,
-                contentDescription = "Neutral Icon",
+                contentDescription = stringResource(id = R.string.neutral_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
@@ -222,25 +224,25 @@ fun ChooseMoodIconContent(
         ) {
             MoodIcon(
                 resource = Mood.Stressed,
-                contentDescription = "Stressed Icon",
+                contentDescription = stringResource(id = R.string.stressed_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Surprised,
-                contentDescription = "Surprised Icon",
+                contentDescription = stringResource(id = R.string.surprised_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.Suspicious,
-                contentDescription = "Suspicious Icon",
+                contentDescription = stringResource(id = R.string.suspicious_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
             MoodIcon(
                 resource = Mood.TiredBored,
-                contentDescription = "Tired/Bored Icon",
+                contentDescription = stringResource(id = R.string.tired_bored_icon),
                 onMoodIconChanged = onMoodIconChanged,
                 onDialogClosed = onDialogClosed
             )
