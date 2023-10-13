@@ -28,12 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.diaryapp.R
 import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.util.Elevation
 import com.example.diaryapp.util.GalleryState
@@ -156,7 +158,6 @@ fun GalleryUploader(
             )
             Spacer(modifier = Modifier.width(spaceBetween))
             for ((index, galleryImage) in galleryState.images.take(numberOfVisibleImages.value).withIndex()) {
-            //galleryState.images.take(numberOfVisibleImages.value).forEach { galleryImage ->
                 AsyncImage(
                     modifier = Modifier
                         .size(imageSize)
@@ -165,7 +166,7 @@ fun GalleryUploader(
                         .data(galleryImage.image)
                         .crossfade(true)
                         .build(),
-                    contentDescription = "Gallery Image",
+                    contentDescription = stringResource(id = R.string.gallery_image),
                     contentScale = ContentScale.Crop
                 )
 
@@ -199,7 +200,7 @@ fun AddImageButton(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add New Image"
+                contentDescription = stringResource(id = R.string.add_new_image)
             )
         }
     }

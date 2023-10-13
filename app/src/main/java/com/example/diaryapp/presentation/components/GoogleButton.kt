@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -37,8 +38,8 @@ import com.example.diaryapp.R
 fun GoogleButton(
     modifier: Modifier = Modifier,
     loadingState: Boolean = false,
-    primaryText: String = "Sign in with Google",
-    secondaryText: String = "Signing in..",
+    primaryText: String = stringResource(id = R.string.sign_in_with_google),
+    secondaryText: String = stringResource(id = R.string.signing_in),
     icon: Int = R.drawable.ic_google_logo,
     borderColor: Color = MaterialTheme.colorScheme.primary,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,

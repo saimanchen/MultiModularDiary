@@ -19,10 +19,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
+import com.example.diaryapp.R
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.util.toInstant
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -64,12 +66,13 @@ fun TopBarWrite(
             .ofPattern("hh:mm a")
             .format(currentTime)
     }
+    val notSpecifiedText = stringResource(id = R.string.not_specified)
     val selectedDiaryDateTime = remember(selectedDiary) {
         if (selectedDiary != null) {
             SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
                 .format(Date.from(selectedDiary.date.toInstant())).uppercase()
         } else {
-            "Not Specified"
+            notSpecifiedText
         }
     }
 
@@ -78,7 +81,7 @@ fun TopBarWrite(
             IconButton(onClick = navigateBack) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Navigate back"
+                    contentDescription = stringResource(id = R.string.navigate_back)
                 )
             }
         },
@@ -111,7 +114,7 @@ fun TopBarWrite(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Delete custom time"
+                        contentDescription = stringResource(id = R.string.delete_custom_time)
                     )
                 }
             } else {
@@ -119,7 +122,7 @@ fun TopBarWrite(
                 ) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
-                        contentDescription = "Choose date and time"
+                        contentDescription = stringResource(id = R.string.choose_date_time)
                     )
                 }
             }
@@ -171,7 +174,7 @@ fun DeleteDiaryEntryAction(
     IconButton(onClick = { isDeleteDialogOpened = true }) {
         Icon(
             imageVector = Icons.Default.Delete,
-            contentDescription = "Delete Diary Entry"
+            contentDescription = stringResource(id = R.string.delete_diary_entry)
         )
     }
 

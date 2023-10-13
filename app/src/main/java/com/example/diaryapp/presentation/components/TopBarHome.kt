@@ -19,6 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.diaryapp.R
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -46,7 +48,7 @@ fun TopBarHome(
             IconButton(onClick = onLogOutClicked) {
                 Icon(
                     imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Log Out"
+                    contentDescription = stringResource(id = R.string.log_out)
                 )
             }
         },
@@ -58,21 +60,21 @@ fun TopBarHome(
                 IconButton(onClick = onDateResetSelected) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Unselect filtered date"
+                        contentDescription = stringResource(id = R.string.unselect_filtered_date)
                     )
                 }
             } else {
                 IconButton(onClick = { dateDialogState.show() }) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
-                        contentDescription = "Date"
+                        contentDescription = stringResource(id = R.string.date)
                     )
                 }
             }
             IconButton(onClick = onDeleteAllDiaryEntriesClicked) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete All Diary Entries"
+                    contentDescription = stringResource(id = R.string.delete_all_diary_entries)
                 )
             }
         },
