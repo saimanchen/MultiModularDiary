@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -84,7 +85,7 @@ fun GalleryPager(
                             .data(galleryState.images[page].image)
                             .crossfade(true)
                             .build(),
-                        contentDescription = null,
+                        contentDescription = stringResource(id = R.string.gallery_image),
                         contentScale = ContentScale.FillWidth
                     )
                 }
@@ -121,7 +122,7 @@ fun PagerNavigationBar(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_keyboard_double_arrow_left_24),
-                contentDescription = "Navigate to first image"
+                contentDescription = stringResource(id = R.string.navigate_to_first_image)
             )
         }
         IconButton(
@@ -134,7 +135,7 @@ fun PagerNavigationBar(
         ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
-                contentDescription = "Navigate to previous image"
+                contentDescription = stringResource(id = R.string.navigate_to_previous_image)
             )
         }
         IconButton(
@@ -147,7 +148,7 @@ fun PagerNavigationBar(
         ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = "Navigate to next image"
+                contentDescription = stringResource(id = R.string.navigate_to_next_image)
             )
         }
         IconButton(
@@ -160,7 +161,7 @@ fun PagerNavigationBar(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_keyboard_double_arrow_right_24),
-                contentDescription = "Navigate to last image"
+                contentDescription = stringResource(id = R.string.navigate_to_last_image)
             )
         }
     }

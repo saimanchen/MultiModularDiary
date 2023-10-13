@@ -12,6 +12,10 @@
     <string name="choose_another_day">Choose another day</string>
     <string name="gallery_image">Gallery Image</string>
     <string name="add_new_image">Add New Image</string>
+    <string name="navigate_to_first_image">Navigate to first image</string>
+    <string name="navigate_to_previous_image">Navigate to previous image</string>
+    <string name="navigate_to_next_image">Navigate to next image</string>
+    <string name="navigate_to_last_image">Navigate to last image</string>
 
     <string name="angry_icon">Angry Icon</string>
     <string name="confounded_icon">Confounded Icon</string>
