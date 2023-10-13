@@ -22,6 +22,8 @@
     <string name="unselect_filtered_date">Unselect Filtered Date</string>
     <string name="date">Date</string>
     <string name="delete_all_diary_entries">Delete All Diary Entries</string>
+    <string name="navigate_back">Navigate Back</string>
+    <string name="delete">Delete</string>
 
     <string name="angry_icon">Angry Icon</string>
     <string name="confounded_icon">Confounded Icon</string>

@@ -19,6 +19,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.diaryapp.R
 
 @ExperimentalMaterial3Api
 @Composable
@@ -51,7 +53,7 @@ fun TopBarImage(
                 IconButton(onClick = onNavigateBackClicked) {
                     Icon(
                         imageVector = if (showZoomableImage) Icons.Default.Close else Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Navigate Back"
+                        contentDescription = stringResource(id = R.string.navigate_back)
                     )
                 }
             }, title = {
@@ -61,7 +63,7 @@ fun TopBarImage(
                 IconButton(onClick = onDeleteClicked) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete"
+                        contentDescription = stringResource(id = R.string.delete)
                     )
                 }
             },
