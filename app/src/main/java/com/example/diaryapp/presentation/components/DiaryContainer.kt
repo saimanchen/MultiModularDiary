@@ -71,8 +71,8 @@ fun DiaryContainer(
     var componentHeight by remember { mutableStateOf(0.dp) }
     var showContent by remember { mutableStateOf(false) }
     var isGalleryLoading by remember { mutableStateOf(false) }
-    var downloadedImages = remember { mutableStateListOf<Uri>() }
-    var downloadImageFailedMessage = stringResource(id = R.string.on_image_download_failed)
+    val downloadedImages = remember { mutableStateListOf<Uri>() }
+    val downloadImageFailedMessage = stringResource(id = R.string.on_image_download_failed)
 
     LaunchedEffect(key1 = showContent) {
         if (showContent && downloadedImages.isEmpty()) {
