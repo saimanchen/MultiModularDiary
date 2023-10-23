@@ -47,7 +47,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.diaryapp.R
 import com.example.diaryapp.model.remote.Diary
@@ -55,7 +54,6 @@ import com.example.diaryapp.model.remote.Mood
 import com.example.diaryapp.util.Elevation
 import com.example.diaryapp.util.fetchImagesFromFirebase
 import com.example.diaryapp.util.toInstant
-import io.realm.kotlin.ext.realmListOf
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
@@ -71,8 +69,8 @@ fun DiaryContainer(
     var componentHeight by remember { mutableStateOf(0.dp) }
     var showContent by remember { mutableStateOf(false) }
     var isGalleryLoading by remember { mutableStateOf(false) }
-    var downloadedImages = remember { mutableStateListOf<Uri>() }
-    var downloadImageFailedMessage = stringResource(id = R.string.on_image_download_failed)
+    val downloadedImages = remember { mutableStateListOf<Uri>() }
+    val downloadImageFailedMessage = stringResource(id = R.string.on_image_download_failed)
 
     LaunchedEffect(key1 = showContent) {
         if (showContent && downloadedImages.isEmpty()) {
@@ -259,19 +257,4 @@ fun DiaryEntryHeader(
                 .background(MaterialTheme.colorScheme.primary)
         )
     }
-}
-
-@Preview
-@Composable
-fun DiaryContainerPreview() {
-    DiaryContainer(
-        diary = Diary().apply {
-            title = "My Diary"
-            description =
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            mood = Mood.Angry.name
-            images = realmListOf("", "")
-        },
-        onClick = {}
-    )
 }

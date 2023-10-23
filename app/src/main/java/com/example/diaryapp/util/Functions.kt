@@ -1,13 +1,59 @@
 package com.example.diaryapp.util
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
+import com.example.diaryapp.model.local.ImagesToDeleteDao
+import com.example.diaryapp.model.local.ImagesToUploadDao
 import com.example.diaryapp.model.local.entity.ImageToDelete
 import com.example.diaryapp.model.local.entity.ImageToUpload
+import com.example.diaryapp.navigation.Screen
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storageMetadata
+import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.types.RealmInstant
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.Instant
+
+fun cleanupCheck(
+    scope: CoroutineScope,
+    imagesToUploadDao: ImagesToUploadDao,
+    imagesToDeleteDao: ImagesToDeleteDao
+) {
+    scope.launch(Dispatchers.IO) {
+        val resultUpload = imagesToUploadDao.getAllImages()
+        resultUpload.forEach { imageToUpload ->
+            retryUploadingImageToFirebase(
+                imageToUpload = imageToUpload,
+                onSuccess = {
+                    scope.launch(Dispatchers.IO) {
+                        imagesToUploadDao.cleanupImage(imageId = imageToUpload.id)
+                        Log.d("roomDB", "uploaded")
+                    }
+                }
+            )
+        }
+        val resultDelete = imagesToDeleteDao.getAllImages()
+        resultDelete.forEach { imageToDelete ->
+            retryDeletingImageToFirebase(
+                imageToDelete = imageToDelete,
+                onSuccess = {
+                    scope.launch(Dispatchers.IO) {
+                        imagesToDeleteDao.cleanupImage(imageId = imageToDelete.id)
+                    }
+                }
+            )
+        }
+    }
+}
+
+fun getStartDestination(): String {
+    val user = App.create(Constants.APP_ID).currentUser
+
+    return if (user != null && user.loggedIn) Screen.Home.route else Screen.Authentication.route
+}
 
 fun fetchImagesFromFirebase(
     remoteImagePaths: List<String>,
