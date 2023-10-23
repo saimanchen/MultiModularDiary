@@ -19,7 +19,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-object MongoDB : MongoDBRepository {
+object MongoDBRepositoryImpl : MongoDBRepository {
     private val app = App.create(APP_ID)
     private val user = app.currentUser
     private lateinit var realm: Realm

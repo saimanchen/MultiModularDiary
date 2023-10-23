@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.diaryapp.data.repository.MongoDB
+import com.example.diaryapp.data.repository.MongoDBRepositoryImpl
 import com.example.diaryapp.model.remote.Diary
 import com.example.diaryapp.model.GalleryImage
 import com.example.diaryapp.model.local.ImagesToDeleteDao
@@ -60,7 +60,7 @@ class WriteViewModel @Inject constructor(
     private fun getSelectedDiary() {
         if (diaryState.selectedDiaryId != null) {
             viewModelScope.launch {
-                MongoDB.getSelectedDiaryEntry(diaryId = ObjectId.invoke(diaryState.selectedDiaryId!!))
+                MongoDBRepositoryImpl.getSelectedDiaryEntry(diaryId = ObjectId.invoke(diaryState.selectedDiaryId!!))
                     .catch {
                         emit(RequestState.Error(Exception("Diary entry is already deleted")))
                     }
@@ -108,7 +108,7 @@ class WriteViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        val result = MongoDB.insertDiaryEntry(diary = diary.apply {
+        val result = MongoDBRepositoryImpl.insertDiaryEntry(diary = diary.apply {
             if (diaryState.updatedDateTime != null) {
                 date = diaryState.updatedDateTime!!
             }
@@ -131,7 +131,7 @@ class WriteViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        val result = MongoDB.updateDiaryEntry(diary = diary.apply {
+        val result = MongoDBRepositoryImpl.updateDiaryEntry(diary = diary.apply {
             _id = ObjectId(diaryState.selectedDiaryId!!)
             date = if (diaryState.updatedDateTime != null) {
                 diaryState.updatedDateTime!!
@@ -179,7 +179,7 @@ class WriteViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (diaryState.selectedDiaryId != null) {
-                val result = MongoDB.deleteDiaryEntry(id = ObjectId(diaryState.selectedDiaryId!!))
+                val result = MongoDBRepositoryImpl.deleteDiaryEntry(id = ObjectId(diaryState.selectedDiaryId!!))
                 if (result is RequestState.Success) {
                     withContext(Dispatchers.Main) {
                         diaryState.selectedDiary?.let {

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.diaryapp.connectivity.ConnectivityObserver
 import com.example.diaryapp.connectivity.NetworkConnectivityObserver
 import com.example.diaryapp.data.repository.DiaryEntries
-import com.example.diaryapp.data.repository.MongoDB
+import com.example.diaryapp.data.repository.MongoDBRepositoryImpl
 import com.example.diaryapp.model.local.ImagesToDeleteDao
 import com.example.diaryapp.model.local.entity.ImageToDelete
 import com.example.diaryapp.util.RequestState
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
             if (::filteredDiaryEntriesJob.isInitialized) {
                 filteredDiaryEntriesJob.cancelAndJoin()
             }
-            MongoDB.getAllDiaryEntries().debounce(2000).collect { result ->
+            MongoDBRepositoryImpl.getAllDiaryEntries().debounce(2000).collect { result ->
                 diaryEntries.value = result
             }
         }
@@ -75,7 +75,7 @@ class HomeViewModel @Inject constructor(
             if (::allDiaryEntriesJob.isInitialized) {
                 allDiaryEntriesJob.cancelAndJoin()
             }
-            MongoDB.getFilteredDiaryEntries(zonedDateTime = zonedDateTime).debounce(1000).collect { result ->
+            MongoDBRepositoryImpl.getFilteredDiaryEntries(zonedDateTime = zonedDateTime).debounce(1000).collect { result ->
                 diaryEntries.value = result
             }
 
@@ -107,7 +107,7 @@ class HomeViewModel @Inject constructor(
                             }
                     }
                     viewModelScope.launch(Dispatchers.IO) {
-                        val result = MongoDB.deleteAllDiaryEntries()
+                        val result = MongoDBRepositoryImpl.deleteAllDiaryEntries()
                         if (result is RequestState.Success) {
                             withContext(Dispatchers.Main) {
                                 onSuccess()
