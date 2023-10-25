@@ -48,7 +48,8 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
         }
     }
 }
@@ -110,4 +111,8 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    implementation(project(":core:ui"))
+    implementation(project(":core:util"))
+    implementation(project(":data:remote"))
 }

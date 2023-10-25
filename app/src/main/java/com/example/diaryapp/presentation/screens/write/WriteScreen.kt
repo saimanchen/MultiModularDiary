@@ -60,16 +60,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.diaryapp.R
-import com.example.diaryapp.model.GalleryImage
-import com.example.diaryapp.model.remote.Diary
-import com.example.diaryapp.model.remote.Mood
-import com.example.diaryapp.presentation.components.ChooseMoodIconDialog
-import com.example.diaryapp.presentation.components.GalleryPager
-import com.example.diaryapp.presentation.components.GalleryUploader
-import com.example.diaryapp.presentation.components.TopBarImage
-import com.example.diaryapp.presentation.components.TopBarWrite
-import com.example.diaryapp.presentation.components.ZoomableImage
-import com.example.diaryapp.util.GalleryState
+import com.example.ui.GalleryImage
+import com.example.ui.GalleryState
+import com.example.ui.components.ChooseMoodIconDialog
+import com.example.ui.components.GalleryPager
+import com.example.ui.components.GalleryUploader
+import com.example.ui.components.TopBarImage
+import com.example.ui.components.TopBarWrite
+import com.example.ui.components.ZoomableImage
+import com.example.util.model.Diary
+import com.example.util.model.Mood
 import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
@@ -244,7 +244,7 @@ fun WriteContent(
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
-    var fieldCantBeEmptyToastMessageText = stringResource(id = R.string.fields_cant_be_empty)
+    val fieldCantBeEmptyToastMessageText = stringResource(id = R.string.fields_cant_be_empty)
 
     LaunchedEffect(key1 = scrollState) {
         scrollState.scrollTo(scrollState.maxValue)

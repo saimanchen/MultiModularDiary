@@ -25,13 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.diaryapp.R
-import com.example.diaryapp.data.repository.DiaryEntries
-import com.example.diaryapp.model.remote.Diary
-import com.example.diaryapp.presentation.components.DateHeader
-import com.example.diaryapp.presentation.components.DiaryContainer
-import com.example.diaryapp.presentation.components.EmptyHomeScreen
-import com.example.diaryapp.presentation.components.TopBarHome
-import com.example.diaryapp.util.RequestState
+import com.example.repository.DiaryEntries
+import com.example.ui.components.DateHeader
+import com.example.ui.components.DiaryContainer
+import com.example.ui.components.EmptyHomeScreen
+import com.example.ui.components.TopBarHome
+import com.example.util.RequestState
+import com.example.util.model.Diary
 import java.time.LocalDate
 import java.time.ZonedDateTime
 

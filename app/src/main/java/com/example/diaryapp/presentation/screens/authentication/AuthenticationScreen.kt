@@ -29,8 +29,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.diaryapp.R
-import com.example.diaryapp.presentation.components.GoogleButton
-import com.example.diaryapp.util.Constants.CLIENT_ID
+import com.example.ui.components.GoogleButton
+import com.example.util.Constants.CLIENT_ID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.stevdzasan.messagebar.ContentWithMessageBar

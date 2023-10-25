@@ -3,7 +3,7 @@ package com.example.diaryapp.presentation.screens.authentication
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.diaryapp.util.Constants.APP_ID
+import com.example.util.Constants.APP_ID
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import kotlinx.coroutines.Dispatchers
