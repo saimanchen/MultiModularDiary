@@ -115,4 +115,5 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:util"))
     implementation(project(":data:remote"))
+    implementation(project(":feature:auth"))
 }

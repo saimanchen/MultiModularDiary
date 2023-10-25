@@ -1,4 +1,4 @@
-package com.example.diaryapp.presentation.screens.authentication
+package com.example.auth
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

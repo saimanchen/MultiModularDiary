@@ -1,4 +1,4 @@
-package com.example.diaryapp.presentation.screens.authentication
+package com.example.auth
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.diaryapp.R
+import com.example.ui.R
 import com.example.ui.components.GoogleButton
 import com.example.util.Constants.CLIENT_ID
 import com.google.firebase.auth.FirebaseAuth
