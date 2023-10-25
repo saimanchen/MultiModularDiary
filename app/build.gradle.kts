@@ -73,9 +73,6 @@ dependencies {
 
     implementation(libs.compose.runtime)
 
-    // Compose Navigation
-    implementation(libs.compose.navigation)
-
     // Splash Screen Api
     implementation(libs.splash)
 
@@ -83,20 +80,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.realm.sync)
     implementation(libs.realm.base)
-
-    // One Tap Login
-    implementation(libs.one.tap.compose)
-
-    // Message Bar Compose
-    implementation(libs.message.bar.compose)
-
-    // Coil
-    implementation(libs.coil)
-
-    // Date & Time Picker
-    implementation(libs.maxkeppeler.dialogs.core)
-    implementation(libs.maxkeppeler.dialogs.calendar)
-    implementation(libs.maxkeppeler.dialogs.clock)
 
     // Firebase
     implementation(libs.firebase.auth)
