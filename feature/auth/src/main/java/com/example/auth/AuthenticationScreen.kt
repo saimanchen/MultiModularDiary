@@ -41,7 +41,7 @@ import com.stevdzasan.onetap.OneTapSignInWithGoogle
 @ExperimentalMaterial3Api
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AuthenticationScreen(
+internal fun AuthenticationScreen(
     authenticatedState: Boolean,
     loadingState: Boolean,
     oneTapState: OneTapSignInState,
@@ -94,7 +94,7 @@ fun AuthenticationScreen(
 }
 
 @Composable
-fun AuthenticationContent(
+internal fun AuthenticationContent(
     loadingState: Boolean,
     onButtonClicked: () -> Unit
 ) {

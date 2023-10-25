@@ -27,7 +27,7 @@ import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+internal class HomeViewModel @Inject constructor(
     private val connectivity: NetworkConnectivityObserver,
     private val imagesToDeleteDao: ImagesToDeleteDao
 ) : ViewModel() {

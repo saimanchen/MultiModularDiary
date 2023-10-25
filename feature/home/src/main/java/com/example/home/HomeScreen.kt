@@ -38,7 +38,7 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(
+internal fun HomeScreen(
     diaryEntries: DiaryEntries,
     isDateSelected: Boolean,
     onDateSelected: (ZonedDateTime) -> Unit,
@@ -106,7 +106,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeContent(
+internal fun HomeContent(
     paddingValues: PaddingValues,
     diaryEntries: Map<LocalDate, List<Diary>>,
     onClick: (String) -> Unit,

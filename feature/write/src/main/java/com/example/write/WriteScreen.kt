@@ -77,7 +77,7 @@ import io.realm.kotlin.ext.toRealmList
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun WriteScreen(
+internal fun WriteScreen(
     diaryState: DiaryState,
     galleryState: GalleryState,
     navigateBack: () -> Unit,
@@ -229,7 +229,7 @@ fun WriteScreen(
 }
 
 @Composable
-fun WriteContent(
+internal fun WriteContent(
     diaryState: DiaryState,
     galleryState: GalleryState,
     onTitleChanged: (String) -> Unit,
@@ -422,7 +422,7 @@ fun WriteContent(
 }
 
 @Composable
-fun ChangeMoodIconAction(
+internal fun ChangeMoodIconAction(
     diaryState: DiaryState,
     onMoodIconChanged: (Mood) -> Unit
 ) {

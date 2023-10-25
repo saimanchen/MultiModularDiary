@@ -35,7 +35,7 @@ import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class WriteViewModel @Inject constructor(
+internal class WriteViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val imagesToUploadDao: ImagesToUploadDao,
     private val imagesToDeleteDao: ImagesToDeleteDao
@@ -285,7 +285,7 @@ class WriteViewModel @Inject constructor(
     }
 }
 
-data class DiaryState(
+internal data class DiaryState(
     val selectedDiaryId: String? = null,
     val selectedDiary: Diary? = null,
     val title: String = "",
