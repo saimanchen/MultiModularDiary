@@ -117,4 +117,5 @@ dependencies {
     implementation(project(":data:remote"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:write"))
 }
