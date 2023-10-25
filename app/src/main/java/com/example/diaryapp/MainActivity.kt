@@ -7,12 +7,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.example.diaryapp.model.local.ImagesToDeleteDao
-import com.example.diaryapp.model.local.ImagesToUploadDao
+import com.example.database.ImagesToDeleteDao
+import com.example.database.ImagesToUploadDao
 import com.example.diaryapp.navigation.SetupNavGraph
-import com.example.diaryapp.ui.theme.DiaryAppTheme
 import com.example.diaryapp.util.cleanupCheck
-import com.example.diaryapp.util.getStartDestination
+import com.example.ui.theme.DiaryAppTheme
+import com.example.util.getStartDestination
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
