@@ -116,4 +116,5 @@ dependencies {
     implementation(project(":core:util"))
     implementation(project(":data:remote"))
     implementation(project(":feature:auth"))
+    implementation(project(":feature:home"))
 }

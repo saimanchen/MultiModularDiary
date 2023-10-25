@@ -1,10 +1,14 @@
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
+    id("io.realm.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 android {
-    namespace 'com.example.auth'
+    namespace 'com.example.home'
     compileSdk 33
 
     defaultConfig {
@@ -49,20 +53,21 @@ dependencies {
     // Compose Navigation
     implementation(libs.compose.navigation)
 
-    // One Tap Login
-    implementation(libs.one.tap.compose)
-
-    // Message Bar Compose
-    implementation(libs.message.bar.compose)
-
-    // Firebase Auth
-    implementation(libs.firebase.auth)
-
     // MongoDB Realm
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.realm.sync)
     implementation(libs.realm.base)
 
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    // Firebase
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.storage)
+
     implementation(project(":core:util"))
     implementation(project(":core:ui"))
+    implementation(project(":data:remote"))
 }
