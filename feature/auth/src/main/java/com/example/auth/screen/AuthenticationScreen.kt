@@ -1,4 +1,4 @@
-package com.example.auth
+package com.example.auth.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
