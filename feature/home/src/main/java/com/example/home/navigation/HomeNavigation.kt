@@ -10,8 +10,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.home.HomeScreen
-import com.example.home.HomeViewModel
+import com.example.home.screen.HomeScreen
+import com.example.home.viewmodel.HomeViewModel
 import com.example.ui.components.CustomAlertDialog
 import com.example.util.Constants.APP_ID
 import com.example.util.RequestState
@@ -21,6 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.Toast
+import androidx.compose.runtime.collectAsState
+import com.example.home.viewmodel.HomeAction
 
 fun NavGraphBuilder.homeRoute(
     navigateToAuthentication: () -> Unit,
@@ -30,26 +32,31 @@ fun NavGraphBuilder.homeRoute(
 ) {
     composable(route = Screen.Home.route) {
         val viewModel: HomeViewModel = hiltViewModel()
-        val diaryEntries by viewModel.diaryEntries
+        val onAction = viewModel::onAction
+        val state = viewModel.uiState.collectAsState().value
+        val diaryEntriesState = state.diaryEntries
+        val isDateSelectedState = state.isDateSelected
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
         var isSignOutDialogOpened by remember { mutableStateOf(false) }
         var isDeleteAllDiaryEntriesDialogOpened by remember { mutableStateOf(false) }
 
 
-        LaunchedEffect(key1 = diaryEntries) {
-            if (diaryEntries != RequestState.Loading) {
+        LaunchedEffect(key1 = diaryEntriesState) {
+            if (diaryEntriesState != RequestState.Loading) {
                 onDataLoaded()
             }
         }
 
         HomeScreen(
-            diaryEntries = diaryEntries,
-            isDateSelected = viewModel.isDateSelected,
+            diaryEntries = diaryEntriesState,
+            isDateSelected = isDateSelectedState,
             onDateSelected = {
-                viewModel.getDiaryEntries(zonedDateTime = it)
+                onAction(HomeAction.GetDiaryEntries(zonedDateTime = it))
             },
-            onDateResetSelected = { viewModel.getDiaryEntries() },
+            onDateResetSelected = {
+                onAction(HomeAction.GetDiaryEntries(null))
+            },
             onLogOutClicked = {
                 isSignOutDialogOpened = true
             },
@@ -81,7 +88,7 @@ fun NavGraphBuilder.homeRoute(
             isDialogOpened = isDeleteAllDiaryEntriesDialogOpened,
             onCloseDialog = { isDeleteAllDiaryEntriesDialogOpened = false },
             onConfirmClicked = {
-                viewModel.deleteAllDiaryEntries(
+                onAction(HomeAction.DeleteAllDiaryEntries(
                     onSuccess = {
                         Toast.makeText(
                             context,
@@ -97,7 +104,7 @@ fun NavGraphBuilder.homeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                )
+                ))
             }
         )
     }
