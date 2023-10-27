@@ -102,7 +102,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    fun deleteAllDiaryEntries(
+    private fun deleteAllDiaryEntries(
         onSuccess: () -> Unit,
         onError: (Throwable) -> Unit
     ) {

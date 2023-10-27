@@ -88,7 +88,7 @@ fun NavGraphBuilder.homeRoute(
             isDialogOpened = isDeleteAllDiaryEntriesDialogOpened,
             onCloseDialog = { isDeleteAllDiaryEntriesDialogOpened = false },
             onConfirmClicked = {
-                viewModel.deleteAllDiaryEntries(
+                onAction(HomeAction.DeleteAllDiaryEntries(
                     onSuccess = {
                         Toast.makeText(
                             context,
@@ -104,7 +104,7 @@ fun NavGraphBuilder.homeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                )
+                ))
             }
         )
     }
