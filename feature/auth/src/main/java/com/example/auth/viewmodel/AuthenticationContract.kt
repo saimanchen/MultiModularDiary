@@ -1,11 +1,11 @@
 package com.example.auth.viewmodel
 
-data class AuthenticationUiState(
+internal data class AuthenticationUiState(
     val isAuthenticated: Boolean = false,
     val isLoading: Boolean = false
 )
 
-sealed class AuthenticationAction {
+internal sealed class AuthenticationAction {
     object SetIsAuthenticated : AuthenticationAction()
     data class SetIsLoading(val boolean: Boolean) : AuthenticationAction()
     data class SignInWithMongoAtlas(

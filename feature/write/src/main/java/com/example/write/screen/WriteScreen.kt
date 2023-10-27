@@ -1,4 +1,4 @@
-package com.example.write
+package com.example.write.screen
 
 import android.annotation.SuppressLint
 import android.net.Uri
@@ -72,13 +72,14 @@ import com.example.util.model.Mood
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import com.example.ui.R
+import com.example.write.viewmodel.WriteUiState
 import io.realm.kotlin.ext.toRealmList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun WriteScreen(
-    diaryState: DiaryState,
+    diaryState: WriteUiState,
     galleryState: GalleryState,
     navigateBack: () -> Unit,
     onTitleChanged: (String) -> Unit,
@@ -230,7 +231,7 @@ internal fun WriteScreen(
 
 @Composable
 internal fun WriteContent(
-    diaryState: DiaryState,
+    diaryState: WriteUiState,
     galleryState: GalleryState,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -423,7 +424,7 @@ internal fun WriteContent(
 
 @Composable
 internal fun ChangeMoodIconAction(
-    diaryState: DiaryState,
+    diaryState: WriteUiState,
     onMoodIconChanged: (Mood) -> Unit
 ) {
     var isMoodDialogOpened by remember { mutableStateOf(false) }

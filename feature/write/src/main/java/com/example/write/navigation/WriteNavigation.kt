@@ -1,8 +1,7 @@
 package com.example.write.navigation
 
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -11,8 +10,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.util.Constants.WRITE_SCREEN_ARG_KEY
 import com.example.util.Screen
-import com.example.write.WriteScreen
-import com.example.write.WriteViewModel
+import com.example.write.screen.WriteScreen
+import com.example.write.viewmodel.WriteAction
+import com.example.write.viewmodel.WriteViewModel
 
 fun NavGraphBuilder.writeRoute(
     navigateBack: () -> Unit
@@ -25,24 +25,21 @@ fun NavGraphBuilder.writeRoute(
             defaultValue = null
         })
     ) {
-        val context = LocalContext.current
         val viewModel: WriteViewModel = hiltViewModel()
-        val diaryState = viewModel.diaryState
+        val onAction = viewModel::onAction
+        val state = viewModel.uiState.collectAsState().value
         val galleryState = viewModel.galleryState
-
-        LaunchedEffect(key1 = diaryState, block = {
-            Log.d("DiaryId", "${diaryState.selectedDiaryId}")
-        })
+        val context = LocalContext.current
 
         WriteScreen(
-            diaryState = diaryState,
+            diaryState = state,
             galleryState = galleryState,
             navigateBack = navigateBack,
-            onTitleChanged = { viewModel.setTitle(it) },
-            onDescriptionChanged = { viewModel.setDescription(it) },
-            onMoodIconChanged = { viewModel.setMood(mood = it) },
+            onTitleChanged = { onAction(WriteAction.SetTitle(it)) },
+            onDescriptionChanged = { onAction(WriteAction.SetDescription(it)) },
+            onMoodIconChanged = { onAction(WriteAction.SetMood(mood = it)) },
             onDeleteConfirmClicked = {
-                viewModel.deleteDiaryEntry(
+                onAction(WriteAction.DeleteDiaryEntry(
                     onSuccess = {
                         Toast.makeText(
                             context,
@@ -58,11 +55,11 @@ fun NavGraphBuilder.writeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                )
+                ))
             },
-            onDateTimeUpdated = { viewModel.setDateTime(it) },
+            onDateTimeUpdated = { onAction(WriteAction.SetDateTime(it)) },
             onSaveClicked = {
-                viewModel.upsertDiary(
+                onAction(WriteAction.UpsertDiaryEntry(
                     diary = it,
                     onSuccess = navigateBack,
                     onError = { message ->
@@ -72,14 +69,16 @@ fun NavGraphBuilder.writeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                )
+                ))
             },
             onImageSelected = {
                 val imageType = context.contentResolver.getType(it)?.split("/")?.last() ?: "jpg"
 
-                viewModel.generateImagePathAndAddToGalleryStateList(
-                    image = it,
-                    imageType = imageType
+                onAction(
+                    WriteAction.GenerateImagePathAndAddToGalleryStateList(
+                        image = it,
+                        imageType = imageType
+                    )
                 )
             },
             onImageDeleteClicked = { galleryState.deleteImage(it) }
