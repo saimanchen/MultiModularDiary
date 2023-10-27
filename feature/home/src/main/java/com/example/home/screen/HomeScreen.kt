@@ -1,4 +1,4 @@
-package com.example.home
+package com.example.home.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
