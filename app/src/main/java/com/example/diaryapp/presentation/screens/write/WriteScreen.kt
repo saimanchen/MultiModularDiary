@@ -78,7 +78,7 @@ import java.time.ZonedDateTime
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WriteScreen(
-    diaryState: DiaryState,
+    diaryState: WriteUiState,
     galleryState: GalleryState,
     navigateBack: () -> Unit,
     onTitleChanged: (String) -> Unit,
@@ -230,7 +230,7 @@ fun WriteScreen(
 
 @Composable
 fun WriteContent(
-    diaryState: DiaryState,
+    diaryState: WriteUiState,
     galleryState: GalleryState,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -244,7 +244,7 @@ fun WriteContent(
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
-    var fieldCantBeEmptyToastMessageText = stringResource(id = R.string.fields_cant_be_empty)
+    val fieldCantBeEmptyToastMessageText = stringResource(id = R.string.fields_cant_be_empty)
 
     LaunchedEffect(key1 = scrollState) {
         scrollState.scrollTo(scrollState.maxValue)
@@ -423,7 +423,7 @@ fun WriteContent(
 
 @Composable
 fun ChangeMoodIconAction(
-    diaryState: DiaryState,
+    diaryState: WriteUiState,
     onMoodIconChanged: (Mood) -> Unit
 ) {
     var isMoodDialogOpened by remember { mutableStateOf(false) }

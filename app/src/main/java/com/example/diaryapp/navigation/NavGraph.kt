@@ -1,6 +1,5 @@
 package com.example.diaryapp.navigation
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -24,8 +23,10 @@ import com.example.diaryapp.presentation.components.CustomAlertDialog
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationAction
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
+import com.example.diaryapp.presentation.screens.home.HomeAction
 import com.example.diaryapp.presentation.screens.home.HomeScreen
 import com.example.diaryapp.presentation.screens.home.HomeViewModel
+import com.example.diaryapp.presentation.screens.write.WriteAction
 import com.example.diaryapp.presentation.screens.write.WriteScreen
 import com.example.diaryapp.presentation.screens.write.WriteViewModel
 import com.example.diaryapp.util.Constants.APP_ID
@@ -37,7 +38,6 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 @Composable
 fun SetupNavGraph(
@@ -138,26 +138,31 @@ fun NavGraphBuilder.homeRoute(
 ) {
     composable(route = Screen.Home.route) {
         val viewModel: HomeViewModel = hiltViewModel()
-        val diaryEntries by viewModel.diaryEntries
+        val onAction = viewModel::onAction
+        val state = viewModel.uiState.collectAsState().value
+        val diaryEntriesState = state.diaryEntries
+        val isDateSelectedState = state.isDateSelected
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
         var isSignOutDialogOpened by remember { mutableStateOf(false) }
         var isDeleteAllDiaryEntriesDialogOpened by remember { mutableStateOf(false) }
 
 
-        LaunchedEffect(key1 = diaryEntries) {
-            if (diaryEntries != RequestState.Loading) {
+        LaunchedEffect(key1 = diaryEntriesState) {
+            if (diaryEntriesState != RequestState.Loading) {
                 onDataLoaded()
             }
         }
 
         HomeScreen(
-            diaryEntries = diaryEntries,
-            isDateSelected = viewModel.isDateSelected,
+            diaryEntries = diaryEntriesState,
+            isDateSelected = isDateSelectedState,
             onDateSelected = {
-                viewModel.getDiaryEntries(zonedDateTime = it)
+                onAction(HomeAction.GetDiaryEntries(zonedDateTime = it))
             },
-            onDateResetSelected = { viewModel.getDiaryEntries() },
+            onDateResetSelected = {
+                onAction(HomeAction.GetDiaryEntries(null))
+            },
             onLogOutClicked = {
                 isSignOutDialogOpened = true
             },
@@ -189,7 +194,8 @@ fun NavGraphBuilder.homeRoute(
             isDialogOpened = isDeleteAllDiaryEntriesDialogOpened,
             onCloseDialog = { isDeleteAllDiaryEntriesDialogOpened = false },
             onConfirmClicked = {
-                viewModel.deleteAllDiaryEntries(
+                onAction(
+                    HomeAction.DeleteAllDiaryEntries(
                     onSuccess = {
                         Toast.makeText(
                             context,
@@ -205,7 +211,7 @@ fun NavGraphBuilder.homeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                )
+                ))
             }
         )
     }
@@ -222,24 +228,21 @@ fun NavGraphBuilder.writeRoute(
             defaultValue = null
         })
     ) {
-        val context = LocalContext.current
         val viewModel: WriteViewModel = hiltViewModel()
-        val diaryState = viewModel.diaryState
+        val onAction = viewModel::onAction
+        val state = viewModel.uiState.collectAsState().value
         val galleryState = viewModel.galleryState
-
-        LaunchedEffect(key1 = diaryState, block = {
-            Log.d("DiaryId", "${diaryState.selectedDiaryId}")
-        })
+        val context = LocalContext.current
 
         WriteScreen(
-            diaryState = diaryState,
+            diaryState = state,
             galleryState = galleryState,
             navigateBack = navigateBack,
-            onTitleChanged = { viewModel.setTitle(it) },
-            onDescriptionChanged = { viewModel.setDescription(it) },
-            onMoodIconChanged = { viewModel.setMood(mood = it) },
+            onTitleChanged = { onAction(WriteAction.SetTitle(it)) },
+            onDescriptionChanged = { onAction(WriteAction.SetDescription(it)) },
+            onMoodIconChanged = { onAction(WriteAction.SetMood(mood = it)) },
             onDeleteConfirmClicked = {
-                viewModel.deleteDiaryEntry(
+                onAction(WriteAction.DeleteDiaryEntry(
                     onSuccess = {
                         Toast.makeText(
                             context,
@@ -255,11 +258,11 @@ fun NavGraphBuilder.writeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                )
+                ))
             },
-            onDateTimeUpdated = { viewModel.setDateTime(it) },
+            onDateTimeUpdated = { onAction(WriteAction.SetDateTime(it)) },
             onSaveClicked = {
-                viewModel.upsertDiary(
+                onAction(WriteAction.UpsertDiaryEntry(
                     diary = it,
                     onSuccess = navigateBack,
                     onError = { message ->
@@ -269,14 +272,16 @@ fun NavGraphBuilder.writeRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                )
+                ))
             },
             onImageSelected = {
                 val imageType = context.contentResolver.getType(it)?.split("/")?.last() ?: "jpg"
 
-                viewModel.generateImagePathAndAddToGalleryStateList(
-                    image = it,
-                    imageType = imageType
+                onAction(
+                    WriteAction.GenerateImagePathAndAddToGalleryStateList(
+                        image = it,
+                        imageType = imageType
+                    )
                 )
             },
             onImageDeleteClicked = { galleryState.deleteImage(it) }
