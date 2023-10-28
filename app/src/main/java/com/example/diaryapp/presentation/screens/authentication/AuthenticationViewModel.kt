@@ -1,6 +1,5 @@
 package com.example.diaryapp.presentation.screens.authentication
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diaryapp.util.Constants.APP_ID
@@ -8,20 +7,40 @@ import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AuthenticationViewModel : ViewModel() {
-    var authenticatedState = mutableStateOf(false)
-        private set
-    var loadingState = mutableStateOf(false)
-        private set
+    private val _uiState = MutableStateFlow(AuthenticationUiState())
+    val uiState: StateFlow<AuthenticationUiState> = _uiState.asStateFlow()
 
-    fun setLoading(loading: Boolean) {
-        loadingState.value = loading
+    fun onAction(action: AuthenticationAction) {
+        when (action) {
+            is AuthenticationAction.SetIsAuthenticated -> updateIsAuthenticated()
+            is AuthenticationAction.SetIsLoading -> updateIsLoading(action.boolean)
+            is AuthenticationAction.SignInWithMongoAtlas -> {
+                signInWithMongoAtlas(
+                    action.tokenId,
+                    action.onSuccess,
+                    action.onError
+                )
+            }
+        }
     }
 
-    fun signInWithMongoAtlas(
+    private fun updateIsAuthenticated() {
+        _uiState.update { it.copy(isAuthenticated = true) }
+    }
+
+    private fun updateIsLoading(boolean: Boolean) {
+        _uiState.update { it.copy(isLoading = boolean) }
+    }
+
+    private fun signInWithMongoAtlas(
         tokenId: String,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit
@@ -38,7 +57,7 @@ class AuthenticationViewModel : ViewModel() {
                     if (result) {
                         onSuccess()
                         delay(600)
-                        authenticatedState.value = true
+                        onAction(AuthenticationAction.SetIsAuthenticated)
                     } else {
                         onError(Exception("User is not logged in."))
                     }
