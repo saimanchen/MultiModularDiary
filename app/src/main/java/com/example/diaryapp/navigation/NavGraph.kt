@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.diaryapp.presentation.components.CustomAlertDialog
+import com.example.diaryapp.presentation.screens.authentication.AuthenticationAction
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationScreen
 import com.example.diaryapp.presentation.screens.authentication.AuthenticationViewModel
 import com.example.diaryapp.presentation.screens.home.HomeScreen
@@ -82,8 +84,10 @@ fun NavGraphBuilder.authenticationRoute(
 ) {
     composable(route = Screen.Authentication.route) {
         val viewModel: AuthenticationViewModel = viewModel()
-        val authenticatedState by viewModel.authenticatedState
-        val loadingState by viewModel.loadingState
+        val onAction = viewModel::onAction
+        val state = viewModel.uiState.collectAsState().value
+        val authenticatedState = state.isAuthenticated
+        val loadingState = state.isLoading
         val oneTapState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
 
@@ -98,28 +102,28 @@ fun NavGraphBuilder.authenticationRoute(
             messageBarState = messageBarState,
             onButtonClicked = {
                 oneTapState.open()
-                viewModel.setLoading(true)
+                viewModel.onAction(AuthenticationAction.SetIsLoading(boolean = true))
             },
             onSuccessfulFirebaseSignIn = { tokenId ->
-                viewModel.signInWithMongoAtlas(
+                onAction(AuthenticationAction.SignInWithMongoAtlas(
                     tokenId = tokenId,
                     onSuccess = {
                         messageBarState.addSuccess("Successfully logged in!")
-                        viewModel.setLoading(false)
+                        onAction(AuthenticationAction.SetIsLoading(boolean = false))
                     },
                     onError = {
                         messageBarState.addError(it)
-                        viewModel.setLoading(false)
+                        onAction(AuthenticationAction.SetIsLoading(boolean = false))
                     }
-                )
+                ))
             },
             onFailedFirebaseSignIn = {
                 messageBarState.addError(it)
-                viewModel.setLoading(false)
+                onAction(AuthenticationAction.SetIsLoading(boolean = false))
             },
             onDialogDismissed = { message ->
                 messageBarState.addError(Exception(message))
-                viewModel.setLoading(false)
+                onAction(AuthenticationAction.SetIsLoading(boolean = false))
             },
             navigateToHome = navigateToHome
         )
