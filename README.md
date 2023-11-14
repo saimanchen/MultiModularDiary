@@ -16,5 +16,5 @@
 </p>
 
 <h2>Project status</h2>
-<p><strong>ON-GOING PROJECT</strong>
+<p><strong>DONE</strong>
 
